@@ -57,18 +57,23 @@ class Snake:
             else:
                 previous_block = self.body[index + 1] - block
                 next_block = self.body[index - 1] - block
-                if previous_block.x == next_block.x:
+                pb_x = previous_block.x
+                pb_y = previous_block.y
+                nb_x = next_block.x
+                nb_y = next_block.y
+
+                if pb_x == nb_x:
                     screen.blit(self.body_vertical, block_rect)
-                elif previous_block.y == next_block.y:
+                elif pb_y == nb_y:
                     screen.blit(self.body_horizontal, block_rect)
                 else:
-                    if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
+                    if pb_x == -1 and nb_y == -1 or pb_y == -1 and nb_x == -1:
                         screen.blit(self.body_tl, block_rect)
-                    elif previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
+                    elif pb_x == -1 and nb_y == 1 or pb_y == 1 and nb_x == -1:
                         screen.blit(self.body_bl, block_rect)
-                    elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
+                    elif pb_x == 1 and nb_y == -1 or pb_y == -1 and nb_x == 1:
                         screen.blit(self.body_tr, block_rect)
-                    elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
+                    elif pb_x == 1 and nb_y == 1 or pb_y == 1 and nb_x == 1:
                         screen.blit(self.body_br, block_rect)
 
     def update_head_graphics(self):
