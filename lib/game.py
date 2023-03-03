@@ -16,32 +16,17 @@ class Game():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                self.movement(event)
                 pygame.display.update()
 
-    # def movement(): 
-    #     for event in pygame.event.get():
-    #         if event.type == pygame.QUIT:
-    #             pygame.quit()
-    #             sys.exit()
-    #         if event.type == SCREEN_UPDATE:
-    #             main_game.update()
-    #         if event.type == pygame.KEYDOWN:
-    #             if event.key == pygame.K_UP:
-    #                 if main_game.snake.direction.y != 1:
-    #                     main_game.snake.direction = Vector2(0,-1)
-    #             if event.key == pygame.K_RIGHT:
-    #                 if main_game.snake.direction.x != -1:
-    #                     main_game.snake.direction = Vector2(1,0)
-    #             if event.key == pygame.K_DOWN:
-    #                 if main_game.snake.direction.y != -1:
-    #                     main_game.snake.direction = Vector2(0,1)
-    #             if event.key == pygame.K_LEFT:
-    #                 if main_game.snake.direction.x != 1:
-    #                     main_game.snake.direction = Vector2(-1,0)
-
-
-
-
-
-if __name__ == "__main__":
-    pass
+    def movement(self, event): 
+        if event.type == pygame.KEYDOWN:
+            key = event.key
+            if key == pygame.K_UP or key == pygame.K_w: 
+                print("up")
+            if key == pygame.K_RIGHT or key == pygame.K_d:
+                print("right")
+            if key == pygame.K_DOWN or key == pygame.K_s:
+                print("down")                
+            if key == pygame.K_LEFT or key == pygame.K_a:
+                print("left")
