@@ -11,6 +11,7 @@ SIZE_PER_CELL = 40
 NUM_CELLS = 25
 BACKGROUND_COLOR = (163, 214, 28)
 GRASS_COLOR = (158, 207, 31)
+EVENT_CYCLE = 150 #ms
 
 
 class Game():
@@ -20,7 +21,7 @@ class Game():
             (NUM_CELLS * SIZE_PER_CELL, NUM_CELLS * SIZE_PER_CELL))
         self.screen.fill(BACKGROUND_COLOR)
         self.clock = pygame.time.Clock()
-        pygame.time.set_timer(pygame.USEREVENT, 150)
+        pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.draw_grass()
         self.snake = Snake(SIZE_PER_CELL)
 
