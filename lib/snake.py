@@ -97,3 +97,9 @@ class Snake:
             self.tail = self.tail_up
         elif tail_relation == Vector2(0, -1):
             self.tail = self.tail_down
+
+    # TODO: implement move_snake logic when retrieve items
+    def move_snake(self):
+        body_copy = self.body[:-1]
+        body_copy.insert(0,body_copy[0] + self.direction)
+        self.body = body_copy[:]
