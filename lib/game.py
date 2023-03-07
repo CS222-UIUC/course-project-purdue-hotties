@@ -24,6 +24,7 @@ class Game():
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.draw_grass()
         self.snake = Snake(SIZE_PER_CELL)
+        self.item = Item(SIZE_PER_CELL) # TODO: this should be a list of item in the future
 
     def game_loop(self):
         while True:
@@ -76,6 +77,7 @@ class Game():
         self.screen.fill(BACKGROUND_COLOR)
         self.draw_grass()
         self.snake.draw_snake(self.screen)
+        self.item.draw_item(self.screen)
 
     def update(self):
         self.snake.move_snake()
