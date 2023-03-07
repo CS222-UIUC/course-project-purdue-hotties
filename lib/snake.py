@@ -5,8 +5,12 @@ from pygame.math import Vector2
 class Snake:
     def __init__(self, size_per_cell) -> None:
         self.size_per_cell = size_per_cell
-        self.body = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
-        self.direction = Vector2(0, 1)
+        self.body = [
+            Vector2(12, 10),
+            Vector2(12, 11),
+            Vector2(12, 12),
+        ]
+        self.direction = Vector2(0, -1)
 
         self.head_up = pygame.image.load(
             'resources/head_up.png').convert_alpha()
@@ -41,19 +45,33 @@ class Snake:
             'resources/body_bl.png').convert_alpha()
 
     def draw_snake(self, screen):
+        components = self.draw_snake_util()
+        for (asset, loc) in components:
+            screen.blit(asset, loc)
+
+    def get_rect(self, block):
         cell_size = self.size_per_cell
+        x_pos = int(block.x * cell_size)
+        y_pos = int(block.y * cell_size)
+        return pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+
+    def draw_snake_util(self):
+        """
+        Returns a list of snake assets and locations based on 
+        the current snake state 
+        """
+        components = []
+
         self.update_head_graphics()
         self.update_tail_graphics()
 
         for index, block in enumerate(self.body):
-            x_pos = int(block.x * cell_size)
-            y_pos = int(block.y * cell_size)
-            block_rect = pygame.Rect(x_pos, y_pos, cell_size, cell_size)
+            block_rect = self.get_rect(block)
 
             if index == 0:
-                screen.blit(self.head, block_rect)
+                asset = self.head
             elif index == len(self.body) - 1:
-                screen.blit(self.tail, block_rect)
+                asset = self.tail
             else:
                 previous_block = self.body[index + 1] - block
                 next_block = self.body[index - 1] - block
@@ -63,18 +81,22 @@ class Snake:
                 nb_y = next_block.y
 
                 if pb_x == nb_x:
-                    screen.blit(self.body_vertical, block_rect)
+                    asset = self.body_vertical
                 elif pb_y == nb_y:
-                    screen.blit(self.body_horizontal, block_rect)
+                    asset = self.body_horizontal
                 else:
                     if pb_x == -1 and nb_y == -1 or pb_y == -1 and nb_x == -1:
-                        screen.blit(self.body_tl, block_rect)
+                        asset = self.body_tl
                     elif pb_x == -1 and nb_y == 1 or pb_y == 1 and nb_x == -1:
-                        screen.blit(self.body_bl, block_rect)
+                        asset = self.body_bl
                     elif pb_x == 1 and nb_y == -1 or pb_y == -1 and nb_x == 1:
-                        screen.blit(self.body_tr, block_rect)
+                        asset = self.body_tr
                     elif pb_x == 1 and nb_y == 1 or pb_y == 1 and nb_x == 1:
-                        screen.blit(self.body_br, block_rect)
+                        asset = self.body_br
+
+            components.append((asset, block_rect))
+
+        return components
 
     def update_head_graphics(self):
         head_relation = self.body[1] - self.body[0]
@@ -101,5 +123,5 @@ class Snake:
     # TODO: implement move_snake logic when retrieve items
     def move_snake(self):
         body_copy = self.body[:-1]
-        body_copy.insert(0,body_copy[0] + self.direction)
+        body_copy.insert(0, body_copy[0] + self.direction)
         self.body = body_copy[:]
