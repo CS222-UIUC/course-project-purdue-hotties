@@ -13,16 +13,16 @@ class Map:
         # if the grid where the head is in contains an item:
         self.interact_with(Item())
 
-    def interact_with(self, item):
-        # if item.is_apple():
-        self.grow_snake()
-        # elif item.is_posion():
-        self.terminate()
+    def interact_with(self, item: Item):
+        if item.item_type() == "apple":
+            self.grow_snake()
+        elif item.item_type() == "posion":
+            self.terminate()
 
     def grow_snake(self):
         # the rest of the body stays the same
         # while the head advances a grid
-        pass
+        self.snake.grow()
 
     def terminate(self):
         pass
