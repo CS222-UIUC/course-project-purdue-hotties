@@ -12,9 +12,13 @@ Please make sure Python3 is installed
 > ./main.py
 ```
 
-## Testing
+## Run unit tests
 ```
 > python3 -m pytest -v
+```
+## Check coverage
+```
+> python3 -m pytest --cov=.
 ```
 
 
