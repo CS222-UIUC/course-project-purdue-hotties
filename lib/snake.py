@@ -125,3 +125,10 @@ class Snake:
         body_copy = self.body[:-1]
         body_copy.insert(0, body_copy[0] + self.direction)
         self.body = body_copy[:]
+
+    def grow(self):
+        self.body.append(self.get_head_advance())
+
+    def get_head_advance() -> Vector2:
+        # returns the grid next to the head
+        pass
