@@ -11,7 +11,7 @@ SIZE_PER_CELL = 40
 NUM_CELLS = 25
 BACKGROUND_COLOR = (163, 214, 28)
 GRASS_COLOR = (158, 207, 31)
-EVENT_CYCLE = 150 #ms
+EVENT_CYCLE = 150  # ms
 
 
 class Game():
@@ -24,7 +24,8 @@ class Game():
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.draw_grass()
         self.snake = Snake(SIZE_PER_CELL)
-        self.item = Item(SIZE_PER_CELL) # TODO: this should be a list of item in the future
+        # TODO: this should be a list of item in the future
+        self.item = Item(SIZE_PER_CELL)
 
     def game_loop(self):
         while True:
@@ -34,8 +35,8 @@ class Game():
                     sys.exit()
                 if event.type == pygame.USEREVENT:
                     self.update()
+                self.movement(event)
 
-            self.movement(event)
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -45,19 +46,19 @@ class Game():
             key = event.key
             if key == pygame.K_UP or key == pygame.K_w:
                 if self.snake.direction.y != 1:
-                    self.snake.direction = Vector2(0,-1)
+                    self.snake.direction = Vector2(0, -1)
                 # print("up")
             if key == pygame.K_RIGHT or key == pygame.K_d:
                 if self.snake.direction.x != -1:
-                    self.snake.direction = Vector2(1,0)
+                    self.snake.direction = Vector2(1, 0)
                 # print("right")
             if key == pygame.K_DOWN or key == pygame.K_s:
                 if self.snake.direction.y != -1:
-                    self.snake.direction = Vector2(0,1)
+                    self.snake.direction = Vector2(0, 1)
                 # print("down")
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
-                    self.snake.direction = Vector2(-1,0)
+                    self.snake.direction = Vector2(-1, 0)
                 # print("left")
 
     def draw_grass(self):
