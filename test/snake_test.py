@@ -43,6 +43,7 @@ def test_snake():
         Vector2(8, 8),
         Vector2(9, 8),
     ]
+    snake.direction = Vector2(-1, 0)
     return snake
 
 
@@ -73,4 +74,28 @@ def test_draw_snake_util():
     ]
     components_ans = [(assets[ind], loc) for ind, loc in enumerate(locations)]
     assert components == components_ans
+    test_exit()
+
+
+def test_move_snake():
+    test_init()
+    snake = test_snake()
+    snake.move_snake()
+    move_ans = [
+        Vector2(9, 10),
+        Vector2(10, 10),
+        Vector2(11, 10),
+        Vector2(11, 11),
+        Vector2(12, 11),
+        Vector2(12, 10),
+        Vector2(12, 9),
+        Vector2(11, 9),
+        Vector2(11, 8),
+        Vector2(10, 8),
+        Vector2(10, 9),
+        Vector2(9, 9),
+        Vector2(8, 9),
+        Vector2(8, 8),
+    ]
+    assert snake.body == move_ans
     test_exit()
