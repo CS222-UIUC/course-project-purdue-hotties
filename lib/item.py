@@ -13,7 +13,6 @@ class Item:
         self.apple = pygame.image.load('resources/apple.png').convert_alpha()
         self.size_per_cell = size_per_cell
 
-
         self.x = random.randint(0, CELL_NUM - 1)
         self.y = random.randint(0, CELL_NUM - 1)
         self.pos = Vector2(self.x, self.y)
