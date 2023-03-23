@@ -5,20 +5,20 @@ Please make sure Python3 is installed
 
 # Getting started!
 ```
-> git clone https://github.com/CS222-UIUC/course-project-purdue-hotties.git
-> cd course-project-purdue-hotties
-> pip install -r requirements.txt
-> chmod +x ./main.py
-> ./main.py
+git clone https://github.com/CS222-UIUC/course-project-purdue-hotties.git
+cd course-project-purdue-hotties
+pip install -r requirements.txt
+chmod +x ./main.py
+./main.py
 ```
 
 ## Run unit tests
 ```
-> python3 -m pytest -v
+python3 -m pytest -v
 ```
 ## Check coverage
 ```
-> python3 -m pytest --cov=.
+python3 -m pytest --cov=.
 ```
 
 
