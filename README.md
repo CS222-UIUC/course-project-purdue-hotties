@@ -8,7 +8,7 @@ Please make sure Python3 is installed
 > git clone https://github.com/CS222-UIUC/course-project-purdue-hotties.git
 > cd course-project-purdue-hotties
 > pip install -r requirements.txt
-> chmod -x ./main.py
+> chmod +x ./main.py
 > ./main.py
 ```
 
