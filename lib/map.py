@@ -5,8 +5,9 @@ from pygame.math import Vector2
 class Map:
     def __init__(self) -> None:
         self.map_grid = [[Item()] * 25 for n in range(25)]
-        self.snake = Snake(1)
+        self.snake = Snake(self.surface, 2)
         # TODO: put snake in a random grid
+         
 
     def tick(self):
         # head advances a grid, erase a tail
