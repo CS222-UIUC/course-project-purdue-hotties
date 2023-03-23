@@ -19,11 +19,15 @@ class Item:
         self.pos = Vector2(self.x, self.y)
         
     
-    def draw_item(self, screen):
+    def draw_item_util(self):
         x_pos = int(self.x * self.size_per_cell)
         y_pos = int(self.y * self.size_per_cell)
         item_rect = pygame.Rect(x_pos, y_pos, self.size_per_cell, self.size_per_cell)
-        screen.blit(self.apple, item_rect)
+        return (self.apple, item_rect)
+
+    def draw_item(self, screen):
+        asset, loc = self.draw_item_util()
+        screen.blit(asset, loc)
         
     def item_type(self) -> str:
         return "item"
