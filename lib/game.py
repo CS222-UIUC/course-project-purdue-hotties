@@ -41,25 +41,54 @@ class Game():
             pygame.display.update()
             self.clock.tick(60)
 
+    def is_collision (self.snake.body,self.item.pos):
+            x1 = self.snake.body[1][1]
+            x2 = self.item.pos[1]
+            y1 = self.snake.body[1][2]
+            y2 = self.item.pos[2]
+            if x1 >= x2 and x1 < x2 + NUM_CELLS:
+                if y1 >= y2 and y1 < y2 + NUM_CELLS:
+                    return True
+            return False
+    
+
+    def play(self):
+        self.snake.walk()
+        self.item.draw_item
+
+        if self.is_collision(self.snake.body[1], self.item.pos):
+            self.snake.grow
+            self.item.draw_item
+
+
     def movement(self, event):
-        if event.type == pygame.KEYDOWN:
-            key = event.key
-            if key == pygame.K_UP or key == pygame.K_w:
-                if self.snake.direction.y != 1:
-                    self.snake.direction = Vector2(0, -1)
-                # print("up")
-            if key == pygame.K_RIGHT or key == pygame.K_d:
-                if self.snake.direction.x != -1:
-                    self.snake.direction = Vector2(1, 0)
-                # print("right")
-            if key == pygame.K_DOWN or key == pygame.K_s:
-                if self.snake.direction.y != -1:
-                    self.snake.direction = Vector2(0, 1)
-                # print("down")
-            if key == pygame.K_LEFT or key == pygame.K_a:
-                if self.snake.direction.x != 1:
-                    self.snake.direction = Vector2(-1, 0)
-                # print("left")
+        running = True
+        while running: 
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    key = event.key
+                    if key == pygame.K_UP or key == pygame.K_w:
+                        if self.snake.direction.y != 1:
+                            self.snake.direction = Vector2(0, -1)
+                            running = False
+                        # print("up")
+                    if key == pygame.K_RIGHT or key == pygame.K_d:
+                        if self.snake.direction.x != -1:
+                            self.snake.direction = Vector2(1, 0)
+                            running = False
+                        # print("right")
+                    if key == pygame.K_DOWN or key == pygame.K_s:
+                        if self.snake.direction.y != -1:
+                            self.snake.direction = Vector2(0, 1)
+                            running = False
+                        # print("down")
+                    if key == pygame.K_LEFT or key == pygame.K_a:
+                        if self.snake.direction.x != 1:
+                            self.snake.direction = Vector2(-1, 0)
+                            running = False
+                        # print("left")
+            self.play()
+        
 
     def draw_grass(self):
         for row in range(NUM_CELLS):
