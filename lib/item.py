@@ -10,7 +10,7 @@ CELL_NUM = 25
 class Item:
     def __init__(self, size_per_cell):
         # self.type = "apple" # placeholder for different types
-        self.apple = pygame.image.load('resources/apple.png').convert_alpha()
+        self.item_image = pygame.image.load('resources/apple.png').convert_alpha() # depends on item type
         self.size_per_cell = size_per_cell
 
         self.x = random.randint(0, CELL_NUM - 1)
@@ -22,7 +22,7 @@ class Item:
         x_pos = int(self.x * self.size_per_cell)
         y_pos = int(self.y * self.size_per_cell)
         item_rect = pygame.Rect(x_pos, y_pos, self.size_per_cell, self.size_per_cell)
-        return (self.apple, item_rect)
+        return (self.item_image, item_rect)
 
     def draw_item(self, screen):
         asset, loc = self.draw_item_util()
@@ -30,6 +30,9 @@ class Item:
         
     def item_type(self) -> str:
         return "item"
+
+    def get_image(self):
+        return self.item_image
 
 class Apple(Item):
     def __init__(self, size_per_cell):
