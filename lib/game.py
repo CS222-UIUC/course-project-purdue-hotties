@@ -59,19 +59,15 @@ class Game():
             if key == pygame.K_UP or key == pygame.K_w:
                 if self.snake.direction.y != 1:
                     self.snake.direction = Vector2(0, -1)
-                # print("up")
             if key == pygame.K_RIGHT or key == pygame.K_d:
                 if self.snake.direction.x != -1:
                     self.snake.direction = Vector2(1, 0)
-                # print("right")
             if key == pygame.K_DOWN or key == pygame.K_s:
                 if self.snake.direction.y != -1:
                     self.snake.direction = Vector2(0, 1)
-                # print("down")
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
-                # print("left")
 
     def draw_grass(self):
         for row in range(NUM_CELLS):
