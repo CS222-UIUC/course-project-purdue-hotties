@@ -69,6 +69,13 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
 
+    def check_collision(self):
+        if self.item.pos == self.snake.body[0]: # check for eating apple
+            print("yes")
+            self.item.randomize(self.snake.body)
+            self.snake.new_block()
+
+
     def draw_grass(self):
         for row in range(NUM_CELLS):
             for col in range(NUM_CELLS):
@@ -91,6 +98,8 @@ class Game():
 
     def update(self):
         self.snake.move_snake()
+        self.check_collision()
+        print(self.item.pos)
 
     def draw_score(self):
         score_text = str(len(self.snake.body) - STARTING_SNAKE_LENGTH)

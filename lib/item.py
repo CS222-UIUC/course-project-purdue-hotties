@@ -18,6 +18,14 @@ class Item:
         self.y = random.randint(0, CELL_NUM - 1)
         self.pos = Vector2(self.x, self.y)
 
+    def randomize(self, snake_body):
+        self.x = random.randint(0, CELL_NUM - 1)
+        self.y = random.randint(0, CELL_NUM - 1)
+        self.pos = Vector2(self.x, self.y)
+
+        while self.pos in snake_body:
+            self.randomize(snake_body)
+
     def draw_item_util(self):
         x_pos = int(self.x * self.size_per_cell)
         y_pos = int(self.y * self.size_per_cell)
