@@ -14,6 +14,20 @@ GRASS_COLOR = (158, 207, 31)
 EVENT_CYCLE = 150  # ms
 
 
+### 03.23 menu development
+# Screen dimensions
+WIDTH, HEIGHT = 1000, 1000
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Snake Game")
+
+# Colors
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+### 03.23 menu development
+
+
 class Game():
     def __init__(self) -> None:
         pygame.init()
@@ -28,7 +42,8 @@ class Game():
         self.item = Item(SIZE_PER_CELL)
 
         ### 03.23 menu development
-        main_menu()
+        FONT = pygame.font.Font(None, 36)
+        self.main_menu(FONT)
         ### 03.23 menu development
 
     def game_loop(self):
@@ -110,60 +125,46 @@ class Game():
 
     ### 03.23 menu development
 
-    # Screen dimensions
-    WIDTH, HEIGHT = 800, 600
-    SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Snake Game")
-
-    # Colors
-    WHITE = (255, 255, 255)
-    GREEN = (0, 255, 0)
-    RED = (255, 0, 0)
-    BLACK = (0, 0, 0)
-
-    # Fonts
-    FONT = pygame.font.Font(None, 36)
-
-    def draw_text(text, color, x, y):
+    def draw_text(self, FONT, text, color, x, y):
         surface = FONT.render(text, True, color)
         rect = surface.get_rect()
         rect.midtop = (x, y)
         SCREEN.blit(surface, rect)
     
-    def main_menu():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    game_loop()
+    def main_menu(self, FONT):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.game_loop()
 
-        SCREEN.fill(BLACK)
-        draw_text("Snake Game", GREEN, WIDTH // 2, HEIGHT // 2 - 100)
-        draw_text("Press ENTER to start", WHITE, WIDTH // 2, HEIGHT // 2)
-        draw_text("Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
+            SCREEN.fill(BLACK)
+            self.draw_text(FONT, "Snake Game", GREEN, WIDTH // 2, HEIGHT // 2 - 100)
+            self.draw_text(FONT, "Press ENTER to start", WHITE, WIDTH // 2, HEIGHT // 2)
+            self.draw_text(FONT, "Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
 
-        pygame.display.flip()
+            pygame.display.flip()
 
-    def game_over_menu():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    game_loop()
-                if event.key == pygame.K_q:
-                    main_menu()
+    def game_over_menu(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        game_loop()
+                    if event.key == pygame.K_q:
+                        main_menu()
 
-        SCREEN.fill(BLACK)
-        draw_text("Game Over", RED, WIDTH // 2, HEIGHT // 2 - 100)
-        draw_text("Press ENTER to play again", WHITE, WIDTH // 2, HEIGHT // 2)
-        draw_text("Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
+            SCREEN.fill(BLACK)
+            draw_text("Game Over", RED, WIDTH // 2, HEIGHT // 2 - 100)
+            draw_text("Press ENTER to play again", WHITE, WIDTH // 2, HEIGHT // 2)
+            draw_text("Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
 
-        pygame.display.flip()
+            pygame.display.flip()
 
     ### 03.23 menu development
