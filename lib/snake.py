@@ -121,7 +121,7 @@ class Snake:
         elif tail_relation == Vector2(0, -1):
             self.tail = self.tail_down
 
-    def new_block(self):
+    def grow_snake(self):
         self.grow = True
         
     def move_snake(self):
@@ -134,10 +134,3 @@ class Snake:
             body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
-
-    def grow(self):
-        self.body.append(self.get_head_advance())
-
-    def get_head_advance() -> Vector2:
-        # returns the grid next to the head
-        pass

@@ -24,10 +24,5 @@ class Map:
         elif item.item_type() == "posion":
             self.terminate()
 
-    def grow_snake(self):
-        # the rest of the body stays the same
-        # while the head advances a grid
-        self.snake.grow()
-
     def terminate(self):
         pass

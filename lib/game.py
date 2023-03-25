@@ -34,6 +34,7 @@ class Game():
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.draw_grass()
         self.snake = Snake(SIZE_PER_CELL)
+
         # TODO: this should be a list of item in the future
         self.item = Item(SIZE_PER_CELL)
 
@@ -69,11 +70,11 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
 
+    # TODO: check for if snake hits the boundaries
     def check_collision(self):
         if self.item.pos == self.snake.body[0]: # check for eating apple
-            print("yes")
             self.item.randomize(self.snake.body)
-            self.snake.new_block()
+            self.snake.grow_snake()
 
 
     def draw_grass(self):
@@ -88,7 +89,6 @@ class Game():
                         row * SIZE_PER_CELL, col * SIZE_PER_CELL, SIZE_PER_CELL, SIZE_PER_CELL)
                     pygame.draw.rect(self.screen, GRASS_COLOR, grass_blk)
 
-    # TODO: check for if snake hits the boundaries
     def draw_elements(self):
         self.screen.fill(BACKGROUND_COLOR)
         self.draw_grass()
@@ -99,7 +99,6 @@ class Game():
     def update(self):
         self.snake.move_snake()
         self.check_collision()
-        print(self.item.pos)
 
     def draw_score(self):
         score_text = str(len(self.snake.body) - STARTING_SNAKE_LENGTH)
