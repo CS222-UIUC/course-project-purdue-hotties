@@ -24,6 +24,20 @@ SCORE_BOX_OUTLINE_WIDTH = 3
 SCORE_COORDINATES = (SIZE_PER_CELL * (NUM_CELLS - 1), SIZE_PER_CELL)
 
 
+### 03.23 menu development
+# Screen dimensions
+WIDTH, HEIGHT = 1000, 1000
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Snake Game")
+
+# Colors
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+### 03.23 menu development
+
+
 class Game():
     def __init__(self) -> None:
         pygame.init()
@@ -36,8 +50,13 @@ class Game():
         self.snake = Snake(SIZE_PER_CELL)
         # TODO: this should be a list of item in the future
         self.item = Item(SIZE_PER_CELL)
-
+        
         self.font = pygame.font.Font('resources/font.ttf', FONT_SIZE)
+
+        ### 03.23 menu development
+        FONT = pygame.font.Font(None, 36)
+        self.main_menu(FONT)
+        ### 03.23 menu developmen
 
     def game_loop(self):
         while True:
@@ -52,6 +71,21 @@ class Game():
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
+
+            ### 03.23 menu development
+
+            # Update game state
+            # ...
+
+            # Check for game over
+            # if game_over:
+            #     game_over_menu()
+
+            # Draw game
+            # ...
+
+            ### 03.23 menu development
+
 
     def movement(self, event):
         if event.type == pygame.KEYDOWN:
@@ -113,3 +147,51 @@ class Game():
     @staticmethod
     def get_map_size():
         return NUM_CELLS
+
+
+
+    ### 03.23 menu development
+
+    def draw_text(self, FONT, text, color, x, y):
+        surface = FONT.render(text, True, color)
+        rect = surface.get_rect()
+        rect.midtop = (x, y)
+        SCREEN.blit(surface, rect)
+    
+    def main_menu(self, FONT):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        self.game_loop()
+
+            SCREEN.fill(BLACK)
+            self.draw_text(FONT, "Snake Game", GREEN, WIDTH // 2, HEIGHT // 2 - 100)
+            self.draw_text(FONT, "Press ENTER to start", WHITE, WIDTH // 2, HEIGHT // 2)
+            self.draw_text(FONT, "Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
+
+            pygame.display.flip()
+
+    def game_over_menu(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        game_loop()
+                    if event.key == pygame.K_q:
+                        main_menu()
+
+            SCREEN.fill(BLACK)
+            draw_text("Game Over", RED, WIDTH // 2, HEIGHT // 2 - 100)
+            draw_text("Press ENTER to play again", WHITE, WIDTH // 2, HEIGHT // 2)
+            draw_text("Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
+
+            pygame.display.flip()
+
+    ### 03.23 menu development
