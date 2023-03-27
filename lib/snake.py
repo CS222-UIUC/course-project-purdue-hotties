@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-
+CELL_NUM = 25
 
 class Snake:
     def __init__(self, size_per_cell) -> None:
@@ -43,6 +43,12 @@ class Snake:
             'resources/body_br.png').convert_alpha()
         self.body_bl = pygame.image.load(
             'resources/body_bl.png').convert_alpha()
+
+    def walk(self):
+        self.update_head_graphics
+        self.update_tail_graphics
+
+
 
     def draw_snake(self, screen):
         components = self.draw_snake_util()
