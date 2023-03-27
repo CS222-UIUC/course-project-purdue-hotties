@@ -9,7 +9,7 @@ class Snake:
             Vector2(12, 10),
             Vector2(12, 11),
             Vector2(12, 12),
-        ]
+        ] # default body length = 3
         self.direction = Vector2(0, -1)
 
         self.head_up = pygame.image.load(
