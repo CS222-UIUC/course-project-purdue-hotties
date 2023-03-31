@@ -24,7 +24,9 @@ def test_draw_item(mocker):
     screen = test_init()
     item = test_item()
     asset, loc = item.draw_item_util()
-    assert asset == item.apple
+    apple_asset = pygame.image.load('resources/apple.png').convert_alpha()
+    assert (asset.get_parent() == apple_asset.get_parent()
+            and asset.get_offset() == apple_asset.get_offset())
     assert loc == pygame.Rect(250, 250, 25, 25)
     item.draw_item(screen)
     test_exit()

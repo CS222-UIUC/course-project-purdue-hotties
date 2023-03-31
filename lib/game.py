@@ -63,7 +63,6 @@ class Game():
 
     def game_loop(self):
         while True:
-            print("in game_loop")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -72,28 +71,9 @@ class Game():
                     self.update()
                 self.movement(event)
 
-            self.step()
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
-
-    def check_collision_with_item(self):
-        x1 = self.snake.body[0][0]
-        x2 = self.item.pos[0]
-        y1 = self.snake.body[0][1]
-        y2 = self.item.pos[1]
-        if x1 >= x2 and x1 < x2 + NUM_CELLS:
-            if y1 >= y2 and y1 < y2 + NUM_CELLS:
-                return True
-        return False
-
-    def step(self):
-        self.snake.walk()
-        self.item.draw_item
-
-        if self.check_collision_with_item():
-            self.snake.grow
-            self.item.draw_item
 
     def movement(self, event):
         if event.type == pygame.KEYDOWN:
@@ -113,6 +93,7 @@ class Game():
                     self.snake.direction = Vector2(-1, 0)
 
     # TODO: check for if snake hits the boundaries
+
     def check_collision(self):
         if self.item.pos == self.snake.body[0]:  # check for eating apple
             self.item.randomize(self.snake.body)
