@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-
+CELL_NUM = 25
 
 class Snake:
     def __init__(self, size_per_cell) -> None:
@@ -9,8 +9,9 @@ class Snake:
             Vector2(12, 10),
             Vector2(12, 11),
             Vector2(12, 12),
-        ]
+        ] # default body length = 3
         self.direction = Vector2(0, -1)
+        self.grow = False
 
         self.head_up = pygame.image.load(
             'resources/head_up.png').convert_alpha()
@@ -43,6 +44,12 @@ class Snake:
             'resources/body_br.png').convert_alpha()
         self.body_bl = pygame.image.load(
             'resources/body_bl.png').convert_alpha()
+
+    def walk(self):
+        self.update_head_graphics
+        self.update_tail_graphics
+
+
 
     def draw_snake(self, screen):
         components = self.draw_snake_util()
@@ -120,15 +127,16 @@ class Snake:
         elif tail_relation == Vector2(0, -1):
             self.tail = self.tail_down
 
-    # TODO: implement move_snake logic when retrieve items
+    def grow_snake(self):
+        self.grow = True
+        
     def move_snake(self):
-        body_copy = self.body[:-1]
-        body_copy.insert(0, body_copy[0] + self.direction)
-        self.body = body_copy[:]
-
-    def grow(self):
-        self.body.append(self.get_head_advance())
-
-    def get_head_advance() -> Vector2:
-        # returns the grid next to the head
-        pass
+        if self.grow == True:
+            self.grow = False
+            body_copy = self.body[:]
+            body_copy.insert(0, body_copy[0] + self.direction)
+            self.body = body_copy[:]
+        else:
+            body_copy = self.body[:-1]
+            body_copy.insert(0, body_copy[0] + self.direction)
+            self.body = body_copy[:]
