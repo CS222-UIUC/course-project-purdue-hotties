@@ -46,20 +46,26 @@ class Game():
         self.screen.fill(BACKGROUND_COLOR)
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
-        self.draw_grass()
-        self.snake = Snake(SIZE_PER_CELL)
-
-        # TODO: this should be a list of item in the future
-        self.item = Item(SIZE_PER_CELL)
-
         self.font = pygame.font.Font('resources/font.ttf', FONT_SIZE)
+
+    def reset_game(self):
+        self.score = 0
+        self.snake = Snake(SIZE_PER_CELL)
+        self.item = Item(SIZE_PER_CELL)
 
     def game_start(self):
         # 03.23 menu development
-        FONT = pygame.font.Font(None, 36)
-        self.main_menu(FONT)
-        # 03.23 menu developmen
-        self.game_loop()
+        font = pygame.font.Font(None, 36)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.main_menu(font)
+            # 03.23 menu developmen
+            self.reset_game()
+            self.game_loop()
+            self.game_over_menu(font)
 
     def game_loop(self):
         while True:
@@ -70,6 +76,8 @@ class Game():
                 if event.type == pygame.USEREVENT:
                     self.update()
                 self.movement(event)
+                if self.check_collision():
+                    return
 
             self.draw_elements()
             pygame.display.update()
@@ -78,7 +86,6 @@ class Game():
     def movement(self, event):
         if event.type == pygame.KEYDOWN:
             key = event.key
-            print(key)
             if key == pygame.K_UP or key == pygame.K_w:
                 if self.snake.direction.y != 1:
                     self.snake.direction = Vector2(0, -1)
@@ -98,6 +105,12 @@ class Game():
         if self.item.pos == self.snake.body[0]:  # check for eating apple
             self.item.randomize(self.snake.body)
             self.snake.grow_snake()
+            self.score += 1
+
+        if self.snake.snake_collision():  # check snake collide
+            return True
+
+        return False
 
     def draw_grass(self):
         for row in range(NUM_CELLS):
@@ -120,10 +133,9 @@ class Game():
 
     def update(self):
         self.snake.move_snake()
-        self.check_collision()
 
     def draw_score(self):
-        score_text = str(len(self.snake.body) - STARTING_SNAKE_LENGTH)
+        score_text = str(self.score)
         score_font = self.font.render(score_text, True, SCORE_TEXT_COLOR)
         score_rect = score_font.get_rect(
             center=(SCORE_COORDINATES[0], SCORE_COORDINATES[1]))
@@ -152,7 +164,7 @@ class Game():
         rect.midtop = (x, y)
         SCREEN.blit(surface, rect)
 
-    def main_menu(self, FONT):
+    def main_menu(self, font):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -163,16 +175,16 @@ class Game():
                         return
 
             SCREEN.fill(BLACK)
-            self.draw_text(FONT, "Snake Game", GREEN,
+            self.draw_text(font, "Snake Game", GREEN,
                            WIDTH // 2, HEIGHT // 2 - 100)
-            self.draw_text(FONT, "Press ENTER to start",
+            self.draw_text(font, "Press ENTER to start",
                            WHITE, WIDTH // 2, HEIGHT // 2)
-            self.draw_text(FONT, "Press Q to quit", WHITE,
+            self.draw_text(font, "Press Q to quit", WHITE,
                            WIDTH // 2, HEIGHT // 2 + 100)
 
             pygame.display.flip()
 
-    def game_over_menu(self):
+    def game_over_menu(self, font):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -180,15 +192,17 @@ class Game():
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        game_loop()
-                    if event.key == pygame.K_q:
-                        main_menu()
+                        return
 
             SCREEN.fill(BLACK)
-            draw_text("Game Over", RED, WIDTH // 2, HEIGHT // 2 - 100)
-            draw_text("Press ENTER to play again",
-                      WHITE, WIDTH // 2, HEIGHT // 2)
-            draw_text("Press Q to quit", WHITE, WIDTH // 2, HEIGHT // 2 + 100)
+            self.draw_text(font, "Game Over", RED,
+                           WIDTH // 2, HEIGHT // 2 - 100)
+            self.draw_text(font, "Score: " + str(self.score), WHITE,
+                           WIDTH // 2, HEIGHT // 2 - 50)
+            self.draw_text(font, "Press ENTER to continue",
+                           WHITE, WIDTH // 2, HEIGHT // 2)
+            self.draw_text(font, "Press Q to quit", WHITE,
+                           WIDTH // 2, HEIGHT // 2 + 100)
 
             pygame.display.flip()
 
