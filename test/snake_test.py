@@ -6,7 +6,8 @@ from lib.snake import Snake
 
 def test_init():
     pygame.init()
-    pygame.display.set_mode((1000, 1000))
+    screen = pygame.display.set_mode((1000, 1000))
+    return screen
 
 
 def test_exit():
@@ -47,12 +48,12 @@ def test_snake():
     return snake
 
 
-def test_draw_snake_util():
+def test_draw_snake():
     """
     Test the draw_snake_util implementation by testing 
     using the test snake object
     """
-    test_init()
+    screen = test_init()
     snake = test_snake()
     components = snake.draw_snake_util()
     locations = [snake.get_rect(b) for b in snake.body]
@@ -74,6 +75,7 @@ def test_draw_snake_util():
     ]
     components_ans = [(assets[ind], loc) for ind, loc in enumerate(locations)]
     assert components == components_ans
+    snake.draw_snake(screen)
     test_exit()
 
 
