@@ -173,6 +173,9 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         return
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        sys.exit()
 
             SCREEN.fill(BLACK)
             self.draw_text(font, "Snake Game", GREEN,
@@ -193,6 +196,9 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         return
+                    if event.key == pygame.K_q:
+                        pygame.quit()
+                        sys.exit()
 
             SCREEN.fill(BLACK)
             self.draw_text(font, "Game Over", RED,
