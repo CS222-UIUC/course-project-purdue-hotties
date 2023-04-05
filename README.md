@@ -25,3 +25,4 @@ python3 -m pytest --cov=.
 ## Credit
 1. https://github.com/codebasics/python_projects/tree/main/1_snake_game
 2. https://github.com/clear-code-projects/Snake
+3. https://freepngimg.com/artistic/portal
