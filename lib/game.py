@@ -52,6 +52,8 @@ class Game():
         self.apple = Apple(SIZE_PER_CELL, NUM_CELLS)
         self.portal_1 = Portal(SIZE_PER_CELL, NUM_CELLS)
         self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
+        self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
+        self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
         self.has_portal = False
         self.portal_enterable = False
 
@@ -111,9 +113,22 @@ class Game():
             self.snake.enter_portal(self.portal_1)
             self.portal_enterable = False
             return
+        elif self.portal_3.pos == self.snake.body[0]:
+            self.snake.enter_portal(self.portal_4)
+            self.portal_enterable = False
+            return
+        elif self.portal_4.pos == self.snake.body[0]:
+            self.snake.enter_portal(self.portal_3)
+            self.portal_enterable = False
+            return
         
     def check_snake_exit_portal(self):
-        if self.has_portal and (self.snake.get_tail_pos() == self.portal_1.pos or self.snake.get_tail_pos() == self.portal_2.pos):
+        tail_at_portal = ( self.snake.get_tail_pos() == self.portal_1.pos or
+            self.snake.get_tail_pos() == self.portal_2.pos or 
+            self.snake.get_tail_pos() == self.portal_3.pos or
+            self.snake.get_tail_pos() == self.portal_4.pos )
+
+        if self.has_portal and tail_at_portal:
             self.has_portal = False
 
     def check_eat_apple(self):
@@ -129,6 +144,8 @@ class Game():
                 self.portal_enterable = True
                 self.portal_1.randomize(self.snake.body)
                 self.portal_2.randomize(self.snake.body)
+                self.portal_3.randomize(self.snake.body)
+                self.portal_4.randomize(self.snake.body)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
@@ -167,6 +184,8 @@ class Game():
         if self.has_portal:
             self.portal_1.draw_item(self.screen)
             self.portal_2.draw_item(self.screen)
+            self.portal_3.draw_item(self.screen)
+            self.portal_4.draw_item(self.screen)
 
         self.draw_score()
 
