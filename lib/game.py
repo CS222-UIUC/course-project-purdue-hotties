@@ -1,17 +1,18 @@
 from lib.snake import Snake
-from lib.item import Item
-from lib.map import Map
+from lib.item import Apple, Portal
 from pygame.math import Vector2
 
 import pygame
 import sys
+import random
 
 # global variables
 SIZE_PER_CELL = 40
-NUM_CELLS = 25
+NUM_CELLS = 20
 FONT_SIZE = 25
 EVENT_CYCLE = 150  # ms
 STARTING_SNAKE_LENGTH = 3
+SPAWN_PORTAL_PROB = 1
 
 # styling options
 BACKGROUND_COLOR = (163, 214, 28)
@@ -23,10 +24,8 @@ SCORE_BOX_OUTLINE_WIDTH = 3
 
 SCORE_COORDINATES = (SIZE_PER_CELL * (NUM_CELLS - 1), SIZE_PER_CELL)
 
-
-# 03.23 menu development
 # Screen dimensions
-WIDTH, HEIGHT = 1000, 1000
+WIDTH, HEIGHT = SIZE_PER_CELL * NUM_CELLS, SIZE_PER_CELL * NUM_CELLS
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
 
@@ -35,7 +34,6 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
-# 03.23 menu development
 
 
 class Game():
@@ -50,11 +48,14 @@ class Game():
 
     def reset_game(self):
         self.score = 0
-        self.snake = Snake(SIZE_PER_CELL)
-        self.item = Item(SIZE_PER_CELL)
+        self.snake = Snake(SIZE_PER_CELL, NUM_CELLS)
+        self.apple = Apple(SIZE_PER_CELL, NUM_CELLS)
+        self.portal_1 = Portal(SIZE_PER_CELL, NUM_CELLS)
+        self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
+        self.has_portal = False
+        self.portal_enterable = False
 
     def game_start(self):
-        # 03.23 menu development
         font = pygame.font.Font(None, 36)
         while True:
             for event in pygame.event.get():
@@ -62,7 +63,6 @@ class Game():
                     pygame.quit()
                     sys.exit()
             self.main_menu(font)
-            # 03.23 menu developmen
             self.reset_game()
             self.game_loop()
             self.game_over_menu(font)
@@ -75,10 +75,11 @@ class Game():
                     sys.exit()
                 if event.type == pygame.USEREVENT:
                     self.update()
+                    self.snake_interaction()
                 self.movement(event)
                 if self.check_collision():
                     return
-
+            
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -99,18 +100,51 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
 
-    # TODO: check for if snake hits the boundaries
+    def check_enter_portal(self):
+        if not self.portal_enterable:
+            return 
+        if self.portal_1.pos == self.snake.body[0]:
+            self.snake.enter_portal(self.portal_2)
+            self.portal_enterable = False
+            return
+        elif self.portal_2.pos == self.snake.body[0]:
+            self.snake.enter_portal(self.portal_1)
+            self.portal_enterable = False
+            return
+        
+    def check_snake_exit_portal(self):
+        if self.has_portal and (self.snake.get_tail_pos() == self.portal_1.pos or self.snake.get_tail_pos() == self.portal_2.pos):
+            self.has_portal = False
 
-    def check_collision(self):
-        if self.item.pos == self.snake.body[0]:  # check for eating apple
-            self.item.randomize(self.snake.body)
+    def check_eat_apple(self):
+        if self.apple.pos == self.snake.body[0]:  # check for eating apple
+            self.apple.randomize(self.snake.body)
             self.snake.grow_snake()
             self.score += 1
 
-        if self.snake.snake_collision():  # check snake collide
-            return True
+            # portal spawning logic after eating an apple
+            random_num = random.uniform(0, 1)
+            if self.has_portal == False and random_num <= SPAWN_PORTAL_PROB and self.check_snake_not_on_portal():
+                self.has_portal = True
+                self.portal_enterable = True
+                self.portal_1.randomize(self.snake.body)
+                self.portal_2.randomize(self.snake.body)
 
-        return False
+    def check_snake_not_on_portal(self):
+        for body_blk in self.snake.body:
+            if body_blk == self.portal_1.pos or body_blk == self.portal_2.pos:
+                return False
+
+        return True
+
+    def snake_interaction(self):
+        self.check_snake_exit_portal()
+        self.check_eat_apple()
+        self.check_enter_portal()
+
+
+    def check_collision(self):
+        return self.snake.snake_collision()
 
     def draw_grass(self):
         for row in range(NUM_CELLS):
@@ -128,7 +162,12 @@ class Game():
         self.screen.fill(BACKGROUND_COLOR)
         self.draw_grass()
         self.snake.draw_snake(self.screen)
-        self.item.draw_item(self.screen)
+        self.apple.draw_item(self.screen)
+
+        if self.has_portal:
+            self.portal_1.draw_item(self.screen)
+            self.portal_2.draw_item(self.screen)
+
         self.draw_score()
 
     def update(self):
@@ -141,22 +180,20 @@ class Game():
             center=(SCORE_COORDINATES[0], SCORE_COORDINATES[1]))
 
         score_box_margin = 5
-        item_rect = self.item.get_image().get_rect(
+        apple_rect = self.apple.get_image().get_rect(
             midright=(score_rect.left, score_rect.centery))
-        score_bg_rect = pygame.Rect(item_rect.left, item_rect.top, item_rect.width +
-                                    score_rect.width + score_box_margin, item_rect.height)
+        score_bg_rect = pygame.Rect(apple_rect.left, apple_rect.top, apple_rect.width +
+                                    score_rect.width + score_box_margin, apple_rect.height)
 
         pygame.draw.rect(self.screen, SCORE_BOX_BG_COLOR, score_bg_rect)
         self.screen.blit(score_font, score_rect)
-        self.screen.blit(self.item.get_image(), item_rect)
+        self.screen.blit(self.apple.get_image(), apple_rect)
         pygame.draw.rect(self.screen, SCORE_BOX_OUTLINE_COLOR,
                          score_bg_rect, SCORE_BOX_OUTLINE_WIDTH)
 
     @staticmethod
     def get_map_size():
         return NUM_CELLS
-
-    # 03.23 menu development
 
     def draw_text(self, FONT, text, color, x, y):
         surface = FONT.render(text, True, color)
@@ -211,5 +248,3 @@ class Game():
                            WIDTH // 2, HEIGHT // 2 + 100)
 
             pygame.display.flip()
-
-    # 03.23 menu development
