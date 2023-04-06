@@ -50,7 +50,7 @@ class Apple(Item):
 class Portal(Item):
     def __init__(self, size_per_cell, cell_num):
         super().__init__(size_per_cell, 'resources/portal.png', cell_num)
-    
+
     def randomize(self, snake_body):
         self.x = random.randint(1, self.cell_num - 2)
         self.y = random.randint(1, self.cell_num - 2)
@@ -58,5 +58,3 @@ class Portal(Item):
 
         while self.pos in snake_body:
             self.randomize(snake_body)
-
-        

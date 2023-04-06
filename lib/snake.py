@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2
 
+
 class Snake:
     def __init__(self, size_per_cell, cell_num):
         self.size_per_cell = size_per_cell
@@ -121,7 +122,6 @@ class Snake:
             elif self.direction == Vector2(0, 1):
                 self.head = self.head_down
 
-
     def update_tail_graphics(self):
         tail_relation = self.body[-2] - self.body[-1]
         if tail_relation == Vector2(1, 0):
@@ -155,7 +155,7 @@ class Snake:
             body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
-    
+
     def get_tail_pos(self):
         return self.body[-1]
 

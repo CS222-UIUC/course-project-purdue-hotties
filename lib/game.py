@@ -81,7 +81,7 @@ class Game():
                 self.movement(event)
                 if self.check_collision():
                     return
-            
+
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -104,7 +104,7 @@ class Game():
 
     def check_enter_portal(self):
         if not self.portal_enterable:
-            return 
+            return
         if self.portal_1.pos == self.snake.body[0]:
             self.snake.enter_portal(self.portal_2)
             self.portal_enterable = False
@@ -121,12 +121,12 @@ class Game():
             self.snake.enter_portal(self.portal_3)
             self.portal_enterable = False
             return
-        
+
     def check_snake_exit_portal(self):
-        tail_at_portal = ( self.snake.get_tail_pos() == self.portal_1.pos or
-            self.snake.get_tail_pos() == self.portal_2.pos or 
-            self.snake.get_tail_pos() == self.portal_3.pos or
-            self.snake.get_tail_pos() == self.portal_4.pos )
+        tail_at_portal = (self.snake.get_tail_pos() == self.portal_1.pos or
+                          self.snake.get_tail_pos() == self.portal_2.pos or
+                          self.snake.get_tail_pos() == self.portal_3.pos or
+                          self.snake.get_tail_pos() == self.portal_4.pos)
 
         if self.has_portal and tail_at_portal:
             self.has_portal = False
@@ -158,7 +158,6 @@ class Game():
         self.check_snake_exit_portal()
         self.check_eat_apple()
         self.check_enter_portal()
-
 
     def check_collision(self):
         return self.snake.snake_collision()
