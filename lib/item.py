@@ -3,25 +3,25 @@ from pygame.math import Vector2
 import pygame
 import random
 
-CELL_NUM = 25
-
-# TODO: create identifiers for different types of items
+# +------ cursor parking lot ------------+
+# |				                         |
+# |			                             |
+# +--------------------------------------+
 
 
 class Item:
-    def __init__(self, size_per_cell):
-        # self.type = "apple" # placeholder for different types
-        self.item_image = pygame.image.load(
-            'resources/apple.png').convert_alpha()  # depends on item type
+    def __init__(self, size_per_cell, resource, cell_num):
+        self.item_image = pygame.image.load(resource).convert_alpha()
         self.size_per_cell = size_per_cell
+        self.cell_num = cell_num
 
-        self.x = random.randint(0, CELL_NUM - 1)
-        self.y = random.randint(0, CELL_NUM - 1)
+        self.x = random.randint(0, self.cell_num - 1)
+        self.y = random.randint(0, self.cell_num - 1)
         self.pos = Vector2(self.x, self.y)
 
     def randomize(self, snake_body):
-        self.x = random.randint(0, CELL_NUM - 1)
-        self.y = random.randint(0, CELL_NUM - 1)
+        self.x = random.randint(0, self.cell_num - 1)
+        self.y = random.randint(0, self.cell_num - 1)
         self.pos = Vector2(self.x, self.y)
 
         while self.pos in snake_body:
@@ -40,3 +40,23 @@ class Item:
 
     def get_image(self):
         return self.item_image
+
+
+class Apple(Item):
+    def __init__(self, size_per_cell, cell_num):
+        super().__init__(size_per_cell, 'resources/apple.png', cell_num)
+
+
+class Portal(Item):
+    def __init__(self, size_per_cell, cell_num):
+        super().__init__(size_per_cell, 'resources/portal.png', cell_num)
+    
+    def randomize(self, snake_body):
+        self.x = random.randint(1, self.cell_num - 2)
+        self.y = random.randint(1, self.cell_num - 2)
+        self.pos = Vector2(self.x, self.y)
+
+        while self.pos in snake_body:
+            self.randomize(snake_body)
+
+        

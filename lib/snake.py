@@ -1,11 +1,10 @@
 import pygame
 from pygame.math import Vector2
-CELL_NUM = 25
-
 
 class Snake:
-    def __init__(self, size_per_cell) -> None:
+    def __init__(self, size_per_cell, cell_num):
         self.size_per_cell = size_per_cell
+        self.cell_num = cell_num
         self.body = [
             Vector2(12, 10),
             Vector2(12, 11),
@@ -13,6 +12,8 @@ class Snake:
         ]  # default body length = 3
         self.direction = Vector2(0, -1)
         self.grow = False
+        self.in_portal = False
+        self.exit_portal_pos = None
 
         self.head_up = pygame.image.load(
             'resources/head_up.png').convert_alpha()
@@ -110,6 +111,16 @@ class Snake:
             self.head = self.head_up
         elif head_relation == Vector2(0, -1):
             self.head = self.head_down
+        else:
+            if self.direction == Vector2(-1, 0):
+                self.head = self.head_left
+            elif self.direction == Vector2(1, 0):
+                self.head = self.head_right
+            elif self.direction == Vector2(0, -1):
+                self.head = self.head_up
+            elif self.direction == Vector2(0, 1):
+                self.head = self.head_down
+
 
     def update_tail_graphics(self):
         tail_relation = self.body[-2] - self.body[-1]
@@ -125,16 +136,28 @@ class Snake:
     def grow_snake(self):
         self.grow = True
 
+    def enter_portal(self, exit_portal):
+        self.in_portal = True
+        self.exit_portal_pos = exit_portal.pos
+
     def move_snake(self):
         if self.grow == True:
             self.grow = False
             body_copy = self.body[:]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
+        elif self.in_portal == True:
+            self.in_portal = False
+            body_copy = self.body[:-1]
+            body_copy.insert(0, self.exit_portal_pos)
+            self.body = body_copy[:]
         else:
             body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0] + self.direction)
             self.body = body_copy[:]
+    
+    def get_tail_pos(self):
+        return self.body[-1]
 
     def snake_collision(self):
         # check collision with self
@@ -144,11 +167,11 @@ class Snake:
                     if self.body[i] == self.body[j]:
                         return True
 
-        #check collision with edge of map 
+        # check collision with edge of map
         for seg in self.body:
             if seg[0] < 0 or seg[1] < 0:
                 return True
-            if seg[0] >= CELL_NUM or seg[1] >= CELL_NUM:
+            if seg[0] >= self.cell_num or seg[1] >= self.cell_num:
                 return True
 
         return False
