@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from lib.item import Item
+from lib.item import Item, Apple, Portal
 import random
 
 
@@ -14,15 +14,15 @@ def test_exit():
     pygame.quit()
 
 
-def test_item():
+def test_apple():
     test_init()
-    return Item(25)
+    return Apple(25, 20)
 
 
 def test_draw_item(mocker):
     mocker.patch('random.randint', return_value=10)
     screen = test_init()
-    item = test_item()
+    item = test_apple()
     asset, loc = item.draw_item_util()
     apple_asset = pygame.image.load('resources/apple.png').convert_alpha()
     assert (asset.get_parent() == apple_asset.get_parent()
