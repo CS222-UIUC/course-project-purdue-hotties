@@ -19,14 +19,29 @@ def test_apple():
     return Apple(25, 20)
 
 
+def test_portal():
+    test_init()
+    return Portal(25, 20)
+
+
 def test_draw_item(mocker):
     mocker.patch('random.randint', return_value=10)
     screen = test_init()
-    item = test_apple()
-    asset, loc = item.draw_item_util()
+    apple = test_apple()
+    portal = test_portal()
+
+    asset_apple, loc_apple = apple.draw_item_util()
     apple_asset = pygame.image.load('resources/apple.png').convert_alpha()
-    assert (asset.get_parent() == apple_asset.get_parent()
-            and asset.get_offset() == apple_asset.get_offset())
-    assert loc == pygame.Rect(250, 250, 25, 25)
-    item.draw_item(screen)
+    assert (asset_apple.get_parent() == apple_asset.get_parent()
+            and asset_apple.get_offset() == apple_asset.get_offset())
+    assert loc_apple == pygame.Rect(250, 250, 25, 25)
+    apple.draw_item(screen)
+
+    asset_portal, loc_portal = portal.draw_item_util()
+    portal_asset = pygame.image.load('resources/portal.png').convert_alpha()
+    assert (asset_portal.get_parent() == portal_asset.get_parent()
+            and asset_portal.get_offset() == portal_asset.get_offset())
+    assert loc_portal == pygame.Rect(250, 250, 25, 25)
+    portal.draw_item(screen)
+
     test_exit()
