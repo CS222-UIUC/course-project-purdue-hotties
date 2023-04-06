@@ -27,7 +27,7 @@ def test_snake():
         8   9   10  11  12
     """
     test_init()
-    snake = Snake(25)
+    snake = Snake(25, 20)
     snake.body = [
         Vector2(10, 10),
         Vector2(11, 10),
