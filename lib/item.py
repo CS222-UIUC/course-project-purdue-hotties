@@ -51,10 +51,10 @@ class Portal(Item):
     def __init__(self, size_per_cell, cell_num):
         super().__init__(size_per_cell, 'resources/portal.png', cell_num)
 
-    def randomize(self, snake_body):
+    def randomize(self, snake_body, items_pos):
         self.x = random.randint(1, self.cell_num - 2)
         self.y = random.randint(1, self.cell_num - 2)
         self.pos = Vector2(self.x, self.y)
 
-        while self.pos in snake_body:
-            self.randomize(snake_body)
+        while self.pos in snake_body or self.pos in items_pos:
+            self.randomize(snake_body, items_pos)
