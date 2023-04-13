@@ -142,10 +142,14 @@ class Game():
             if self.has_portal == False and random_num <= SPAWN_PORTAL_PROB and self.check_snake_not_on_portal():
                 self.has_portal = True
                 self.portal_enterable = True
-                self.portal_1.randomize(self.snake.body)
-                self.portal_2.randomize(self.snake.body)
-                self.portal_3.randomize(self.snake.body)
-                self.portal_4.randomize(self.snake.body)
+                portal_pos = [self.apple.pos]
+                self.portal_1.randomize(self.snake.body, portal_pos)
+                portal_pos.append(self.portal_1.pos)
+                self.portal_2.randomize(self.snake.body, portal_pos)
+                portal_pos.append(self.portal_2.pos)
+                self.portal_3.randomize(self.snake.body, portal_pos)
+                portal_pos.append(self.portal_3.pos)
+                self.portal_4.randomize(self.snake.body, portal_pos)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
