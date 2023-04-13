@@ -1,5 +1,5 @@
 from lib.snake import Snake
-from lib.item import Apple, Portal
+from lib.item import Apple, Portal, Block
 from pygame.math import Vector2
 
 import pygame
@@ -13,6 +13,7 @@ FONT_SIZE = 25
 EVENT_CYCLE = 150  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
+BLOCK_NUM = 4
 
 # styling options
 BACKGROUND_COLOR = (163, 214, 28)
@@ -54,8 +55,16 @@ class Game():
         self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
         self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
         self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
+        self.blocks = self.init_blocks()
         self.has_portal = False
+        self.has_block = False
         self.portal_enterable = False
+
+    def init_blocks(self):
+        blocks_pos = []
+        for _ in range(BLOCK_NUM):
+            blocks_pos.append(Block(SIZE_PER_CELL, NUM_CELLS))
+        return blocks_pos
 
     def game_start(self):
         font = pygame.font.Font(None, 36)
@@ -136,20 +145,29 @@ class Game():
             self.apple.randomize(self.snake.body)
             self.snake.grow_snake()
             self.score += 1
+            items_pos = [self.apple.pos]
 
             # portal spawning logic after eating an apple
             random_num = random.uniform(0, 1)
             if self.has_portal == False and random_num <= SPAWN_PORTAL_PROB and self.check_snake_not_on_portal():
                 self.has_portal = True
                 self.portal_enterable = True
-                portal_pos = [self.apple.pos]
-                self.portal_1.randomize(self.snake.body, portal_pos)
-                portal_pos.append(self.portal_1.pos)
-                self.portal_2.randomize(self.snake.body, portal_pos)
-                portal_pos.append(self.portal_2.pos)
-                self.portal_3.randomize(self.snake.body, portal_pos)
-                portal_pos.append(self.portal_3.pos)
-                self.portal_4.randomize(self.snake.body, portal_pos)
+                self.portal_1.randomize(self.snake.body, items_pos)
+                items_pos.append(self.portal_1.pos)
+                self.portal_2.randomize(self.snake.body, items_pos)
+                items_pos.append(self.portal_2.pos)
+                self.portal_3.randomize(self.snake.body, items_pos)
+                items_pos.append(self.portal_3.pos)
+                self.portal_4.randomize(self.snake.body, items_pos)
+                items_pos.append(self.portal_4.pos)
+                
+            
+            # random obstacle spawning logic after eating an apple
+            self.has_block = True
+            if self.has_block == True:
+                for blk in self.blocks:
+                    blk.randomize(self.snake.body, items_pos)
+                    items_pos.append(blk.pos)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
@@ -164,7 +182,10 @@ class Game():
         self.check_enter_portal()
 
     def check_collision(self):
-        return self.snake.snake_collision()
+        if self.has_block == False:
+            return self.snake.snake_collision([])
+
+        return self.snake.snake_collision(self.blocks)
 
     def draw_grass(self):
         for row in range(NUM_CELLS):
@@ -189,6 +210,10 @@ class Game():
             self.portal_2.draw_item(self.screen)
             self.portal_3.draw_item(self.screen)
             self.portal_4.draw_item(self.screen)
+        
+        if self.has_block:
+            for blk in self.blocks:
+                blk.draw_item(self.screen)
 
         self.draw_score()
 
