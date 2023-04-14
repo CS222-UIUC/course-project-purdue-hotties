@@ -159,7 +159,7 @@ class Snake:
     def get_tail_pos(self):
         return self.body[-1]
 
-    def snake_collision(self):
+    def snake_collision(self, blocks):
         # check collision with self
         for i in range(len(self.body)):
             for j in range(len(self.body)):
@@ -173,5 +173,11 @@ class Snake:
                 return True
             if seg[0] >= self.cell_num or seg[1] >= self.cell_num:
                 return True
+        
+        # check collision with blocks:
+        for seg in self.body:
+            for blk in blocks:
+                if seg == blk.pos:
+                    return True
 
         return False
