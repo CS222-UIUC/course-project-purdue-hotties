@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 100  # ms
+EVENT_CYCLE = 150  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -47,6 +47,7 @@ class Game():
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.font = pygame.font.Font('resources/font.ttf', FONT_SIZE)
+        self.bot = Bot(NUM_CELLS)
 
         self.enable_portal = options.get("portal", True)
         self.enable_block = options.get("block", True)
@@ -98,10 +99,16 @@ class Game():
                 if event.type == pygame.USEREVENT:
                     self.update()
                     self.snake_interaction()
-                self.movement(event)
+
+                if self.enable_bot == False:
+                    self.movement(event)
+                else:
+                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.apple.pos)
+                    self.bot_movement(bot_choice)
+
                 if self.check_collision():
                     return
-
+                
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -121,6 +128,20 @@ class Game():
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
+    
+    def bot_movement(self, bot_choice):
+        if bot_choice == 0:
+            if self.snake.direction.y != 1:
+                self.snake.direction = Vector2(0, -1)
+        if bot_choice == 3:
+            if self.snake.direction.x != -1:
+                self.snake.direction = Vector2(1, 0)
+        if bot_choice == 2:
+            if self.snake.direction.y != -1:
+                self.snake.direction = Vector2(0, 1)
+        if bot_choice == 1:
+            if self.snake.direction.x != 1:
+                self.snake.direction = Vector2(-1, 0)
 
     def check_enter_portal(self):
         if not self.portal_enterable:

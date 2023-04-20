@@ -2,6 +2,6 @@
 from lib.game import Game
 
 if __name__ == "__main__":
-    options = {"portal" : True, "block" : False}
+    options = {"portal" : False, "block" : False, "bot": True}
     game = Game(options)
     game.game_start()

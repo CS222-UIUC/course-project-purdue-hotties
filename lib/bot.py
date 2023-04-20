@@ -40,7 +40,10 @@ class Bot:
         self.reset_graph()
         self.update_graph(snake_pos, apple_pos)
         self.snake_head = snake_pos[0]
+        print(apple_pos)
         pos, path_history = self.bfs(self.snake_head, snake_dir)
+
+
         return self.backtrack(pos, path_history)
 
     def bfs(self, loc, dir):
@@ -59,7 +62,7 @@ class Bot:
             curr_pos = queue[0]
             x, y, d = curr_pos
             queue.pop(0)
-            visited.add(curr_pos)
+            
 
             if self.map[x][y][d] == APPLE:
                 return curr_pos, prev
@@ -74,6 +77,7 @@ class Bot:
             for i in range(4):
                 next_coord = (next_x, next_y, i)
                 if next_coord not in visited:
+                    visited.add(curr_pos)
                     prev[next_coord] = (x, y, d)
                     queue.append(next_coord)
 
