@@ -38,7 +38,7 @@ BLACK = (0, 0, 0)
 
 
 class Game():
-    def __init__(self) -> None:
+    def __init__(self, options) -> None:
         pygame.init()
         self.screen = pygame.display.set_mode(
             (NUM_CELLS * SIZE_PER_CELL, NUM_CELLS * SIZE_PER_CELL))
@@ -47,15 +47,24 @@ class Game():
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.font = pygame.font.Font('resources/font.ttf', FONT_SIZE)
 
+        self.enable_portal = options.get("portal", True)
+        self.enable_block = options.get("block", True)
+
+
     def reset_game(self):
         self.score = 0
         self.snake = Snake(SIZE_PER_CELL, NUM_CELLS)
         self.apple = Apple(SIZE_PER_CELL, NUM_CELLS)
-        self.portal_1 = Portal(SIZE_PER_CELL, NUM_CELLS)
-        self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
-        self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
-        self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
-        self.blocks = self.init_blocks()
+        
+        if self.enable_portal:
+            self.portal_1 = Portal(SIZE_PER_CELL, NUM_CELLS)
+            self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
+            self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
+            self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
+
+        if self.enable_block:
+            self.blocks = self.init_blocks()
+
         self.has_portal = False
         self.has_block = False
         self.portal_enterable = False
@@ -148,26 +157,27 @@ class Game():
             items_pos = [self.apple.pos]
 
             # portal spawning logic after eating an apple
-            random_num = random.uniform(0, 1)
-            if self.has_portal == False and random_num <= SPAWN_PORTAL_PROB and self.check_snake_not_on_portal():
-                self.has_portal = True
-                self.portal_enterable = True
-                self.portal_1.randomize(self.snake.body, items_pos)
-                items_pos.append(self.portal_1.pos)
-                self.portal_2.randomize(self.snake.body, items_pos)
-                items_pos.append(self.portal_2.pos)
-                self.portal_3.randomize(self.snake.body, items_pos)
-                items_pos.append(self.portal_3.pos)
-                self.portal_4.randomize(self.snake.body, items_pos)
-                items_pos.append(self.portal_4.pos)
+            if self.enable_portal:
+                random_num = random.uniform(0, 1)
+                if self.has_portal == False and random_num <= SPAWN_PORTAL_PROB and self.check_snake_not_on_portal():
+                    self.has_portal = True
+                    self.portal_enterable = True
+                    self.portal_1.randomize(self.snake.body, items_pos)
+                    items_pos.append(self.portal_1.pos)
+                    self.portal_2.randomize(self.snake.body, items_pos)
+                    items_pos.append(self.portal_2.pos)
+                    self.portal_3.randomize(self.snake.body, items_pos)
+                    items_pos.append(self.portal_3.pos)
+                    self.portal_4.randomize(self.snake.body, items_pos)
+                    items_pos.append(self.portal_4.pos)
                 
-            
             # random obstacle spawning logic after eating an apple
-            self.has_block = True
-            if self.has_block == True:
-                for blk in self.blocks:
-                    blk.randomize(self.snake.body, items_pos)
-                    items_pos.append(blk.pos)
+            if self.enable_block: 
+                self.has_block = True
+                if self.has_block == True:
+                    for blk in self.blocks:
+                        blk.randomize(self.snake.body, items_pos)
+                        items_pos.append(blk.pos)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
@@ -177,9 +187,11 @@ class Game():
         return True
 
     def snake_interaction(self):
-        self.check_snake_exit_portal()
+        if self.enable_portal:
+            self.check_snake_exit_portal()
         self.check_eat_apple()
-        self.check_enter_portal()
+        if self.enable_portal:
+            self.check_enter_portal()
 
     def check_collision(self):
         if self.has_block == False:
