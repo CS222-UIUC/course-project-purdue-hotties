@@ -1,4 +1,5 @@
 from lib.snake import Snake
+from lib.bot import Bot
 from lib.item import Apple, Portal, Block
 from pygame.math import Vector2
 
@@ -10,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 150  # ms
+EVENT_CYCLE = 100  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
