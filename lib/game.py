@@ -49,6 +49,7 @@ class Game():
 
         self.enable_portal = options.get("portal", True)
         self.enable_block = options.get("block", True)
+        self.enable_bot = options.get("bot", False)
 
 
     def reset_game(self):
