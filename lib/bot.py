@@ -37,18 +37,19 @@ class Bot:
             self.map[int(blk.x)][int(blk.y)] = [SNAKE] * NUM_DIRE
 
     def get_move(self, snake_pos, snake_dir, apple_pos):
+        if len(snake_pos) <= 0:
+            return None
         self.reset_graph()
         self.update_graph(snake_pos, apple_pos)
-        self.snake_head = snake_pos[0]
-        print(apple_pos)
-        pos, path_history = self.bfs(self.snake_head, snake_dir)
-
-
-        return self.backtrack(pos, path_history)
+        pos, path_history = self.bfs(snake_pos[0], snake_dir)
+        if (pos == snake_pos[0]):
+            return self.greedy(snake_pos[0], snake_dir)
+        return self.backtrack(pos, path_history, snake_pos[0])
 
     def bfs(self, loc, dir):
         queue = []
         prev = {}
+        visited = set()
 
         for k, v in VECTOR_LOOKUP.items():
             if k == (self._vector2_to_pair(-dir)): 
@@ -56,13 +57,14 @@ class Bot:
             queue.append((int(loc.x), int(loc.y), v))
             prev[(int(loc.x), int(loc.y), v)] = (-1, -1, -1)
 
-        visited = set()
 
         while len(queue):
             curr_pos = queue[0]
-            x, y, d = curr_pos
             queue.pop(0)
-            
+            if curr_pos in visited:
+                continue
+            x, y, d = curr_pos
+            visited.add(curr_pos)
 
             if self.map[x][y][d] == APPLE:
                 return curr_pos, prev
@@ -76,16 +78,27 @@ class Bot:
             
             for i in range(4):
                 next_coord = (next_x, next_y, i)
-                if next_coord not in visited:
-                    visited.add(curr_pos)
+                if next_coord not in visited and (self.map[next_x][next_y][i] == EMPTY or self.map[next_x][next_y][i] == APPLE):
                     prev[next_coord] = (x, y, d)
                     queue.append(next_coord)
+        
+        return loc, prev
 
-    def backtrack(self, pos, path_history):
-        if path_history[pos][0] == int(self.snake_head.x) and path_history[pos][1] == int(self.snake_head.y):
+    def greedy(self, loc, dir):
+        for k, v in VECTOR_LOOKUP.items():
+            if k == (self._vector2_to_pair(-dir)): 
+                continue
+            next_x = int(loc.x + dir.x)
+            next_y = int(loc.y + dir.y)
+            if (self.map[next_x][next_y][0] == EMPTY or self.map[next_x][next_y][0] == APPLE):
+                return v
+        return None
+
+    def backtrack(self, pos, path_history, snake_head):
+        if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
             return path_history[pos][2]
         
-        return self.backtrack(path_history[pos], path_history)
+        return self.backtrack(path_history[pos], path_history, snake_head)
 
 
 if __name__ == "__main__":
