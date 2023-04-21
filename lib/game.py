@@ -17,6 +17,7 @@ SPAWN_PORTAL_PROB = 1
 # styling options
 BACKGROUND_COLOR = (163, 214, 28)
 GRASS_COLOR = (158, 207, 31)
+MENU_BROWN_BLOCK_COLOR = (139, 69, 19)
 SCORE_TEXT_COLOR = (0, 0, 0)
 SCORE_BOX_BG_COLOR = (167, 209, 61)
 SCORE_BOX_OUTLINE_COLOR = (0, 0, 0)
@@ -177,6 +178,18 @@ class Game():
                     grass_blk = pygame.Rect(
                         row * SIZE_PER_CELL, col * SIZE_PER_CELL, SIZE_PER_CELL, SIZE_PER_CELL)
                     pygame.draw.rect(self.screen, GRASS_COLOR, grass_blk)
+    
+    def draw_menu_block(self):
+        for row in range(NUM_CELLS // 2 - 4, NUM_CELLS // 2 + 6):
+            for col in range(NUM_CELLS // 2 - 3, NUM_CELLS // 2 + 5):
+                menu_blk = pygame.Rect(
+                    row * SIZE_PER_CELL, col * SIZE_PER_CELL, SIZE_PER_CELL, SIZE_PER_CELL)
+                pygame.draw.rect(self.screen, BLACK, menu_blk)
+        for row in range(NUM_CELLS // 2 - 5, NUM_CELLS // 2 + 5):
+            for col in range(NUM_CELLS // 2 - 4, NUM_CELLS // 2 + 4):
+                menu_blk = pygame.Rect(
+                    row * SIZE_PER_CELL, col * SIZE_PER_CELL, SIZE_PER_CELL, SIZE_PER_CELL)
+                pygame.draw.rect(self.screen, MENU_BROWN_BLOCK_COLOR, menu_blk)
 
     def draw_elements(self):
         self.screen.fill(BACKGROUND_COLOR)
@@ -236,13 +249,15 @@ class Game():
                         pygame.quit()
                         sys.exit()
 
-            SCREEN.fill(BLACK)
-            self.draw_text(font, "Snake Game", GREEN,
-                           WIDTH // 2, HEIGHT // 2 - 100)
+            SCREEN.fill(BACKGROUND_COLOR)
+            self.draw_grass()
+            self.draw_menu_block()
+            self.draw_text(font, "Snake Game", BLACK,
+                           WIDTH // 2, HEIGHT // 2 - 115)
             self.draw_text(font, "Press ENTER to start",
-                           WHITE, WIDTH // 2, HEIGHT // 2)
+                           WHITE, WIDTH // 2, HEIGHT // 2 - 10)
             self.draw_text(font, "Press Q to quit", WHITE,
-                           WIDTH // 2, HEIGHT // 2 + 100)
+                           WIDTH // 2, HEIGHT // 2 + 95)
 
             pygame.display.flip()
 
@@ -259,14 +274,16 @@ class Game():
                         pygame.quit()
                         sys.exit()
 
-            SCREEN.fill(BLACK)
-            self.draw_text(font, "Game Over", RED,
-                           WIDTH // 2, HEIGHT // 2 - 100)
-            self.draw_text(font, "Score: " + str(self.score), WHITE,
-                           WIDTH // 2, HEIGHT // 2 - 50)
+            SCREEN.fill(BACKGROUND_COLOR)
+            self.draw_grass()
+            self.draw_menu_block()
+            self.draw_text(font, "Game Over", BLACK,
+                           WIDTH // 2, HEIGHT // 2 - 115)
+            self.draw_text(font, "Score: " + str(self.score), BLACK,
+                           WIDTH // 2, HEIGHT // 2 - 45)
             self.draw_text(font, "Press ENTER to continue",
-                           WHITE, WIDTH // 2, HEIGHT // 2)
+                           WHITE, WIDTH // 2, HEIGHT // 2 + 25)
             self.draw_text(font, "Press Q to quit", WHITE,
-                           WIDTH // 2, HEIGHT // 2 + 100)
+                           WIDTH // 2, HEIGHT // 2 + 95)
 
             pygame.display.flip()
