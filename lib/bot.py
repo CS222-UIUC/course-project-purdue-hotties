@@ -88,8 +88,10 @@ class Bot:
         for k, v in VECTOR_LOOKUP.items():
             if k == (self._vector2_to_pair(-dir)): 
                 continue
-            next_x = int(loc.x + dir.x)
-            next_y = int(loc.y + dir.y)
+            next_x = int(loc.x + k[0])
+            next_y = int(loc.y + k[1])
+            if next_x < 0 or next_x >= self.map_size or next_y < 0 or next_y >= self.map_size:
+                continue
             if (self.map[next_x][next_y][0] == EMPTY or self.map[next_x][next_y][0] == APPLE):
                 return v
         return None
