@@ -12,6 +12,7 @@ class Snake:
             Vector2(12, 12),
         ]  # default body length = 3
         self.direction = Vector2(0, -1)
+        self.tail_last_block = Vector2(12, 13)
         self.grow = False
         self.in_portal = False
         self.exit_portal_pos = None
@@ -141,6 +142,8 @@ class Snake:
         self.exit_portal_pos = exit_portal.pos
 
     def move_snake(self):
+        self.tail_last_block = self.body[-1]
+
         if self.grow == True:
             self.grow = False
             body_copy = self.body[:]

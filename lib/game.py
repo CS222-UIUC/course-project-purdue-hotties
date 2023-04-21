@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 150  # ms
+EVENT_CYCLE = 1  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -102,14 +102,15 @@ class Game():
                     self.update()
                     self.snake_interaction()
 
+                if self.check_collision():
+                    return
+                
                 if self.enable_bot == False:
                     self.movement(event)
                 else:
-                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.apple.pos, self.blocks)
+                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.snake.tail_last_block, self.apple.pos, self.blocks)
                     self.bot_movement(bot_choice)
 
-                if self.check_collision():
-                    return
                 
             self.draw_elements()
             pygame.display.update()
