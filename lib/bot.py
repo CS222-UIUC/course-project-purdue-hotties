@@ -31,16 +31,18 @@ class Bot:
     def _vector2_to_pair(self, vector):
         return (int(vector.x), int(vector.y))
 
-    def update_graph(self, snake_pos, apple_pos):
+    def update_graph(self, snake_pos, apple_pos, blocks):
         self.map[int(apple_pos.x)][int(apple_pos.y)] = [APPLE] * NUM_DIRE
-        for blk in snake_pos:
-            self.map[int(blk.x)][int(blk.y)] = [SNAKE] * NUM_DIRE
+        for snk in snake_pos:
+            self.map[int(snk.x)][int(snk.y)] = [SNAKE] * NUM_DIRE
+        for blk in blocks:
+            self.map[int(blk.pos.x)][int(blk.pos.y)] = [SNAKE] * NUM_DIRE
 
-    def get_move(self, snake_pos, snake_dir, apple_pos):
+    def get_move(self, snake_pos, snake_dir, apple_pos, blocks):
         if len(snake_pos) <= 0:
             return None
         self.reset_graph()
-        self.update_graph(snake_pos, apple_pos)
+        self.update_graph(snake_pos, apple_pos, blocks)
         pos, path_history = self.bfs(snake_pos[0], snake_dir)
         if (pos == snake_pos[0]):
             return self.greedy(snake_pos[0], snake_dir)

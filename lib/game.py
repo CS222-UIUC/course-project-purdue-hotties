@@ -65,6 +65,7 @@ class Game():
             self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
             self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
 
+        self.blocks = []
         if self.enable_block:
             self.blocks = self.init_blocks()
 
@@ -103,7 +104,7 @@ class Game():
                 if self.enable_bot == False:
                     self.movement(event)
                 else:
-                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.apple.pos)
+                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.apple.pos, self.blocks)
                     self.bot_movement(bot_choice)
 
                 if self.check_collision():
