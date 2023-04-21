@@ -1,4 +1,5 @@
 from lib.snake import Snake
+from lib.bot import Bot
 from lib.item import Apple, Portal, Block
 from pygame.math import Vector2
 
@@ -46,6 +47,7 @@ class Game():
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(pygame.USEREVENT, EVENT_CYCLE)
         self.font = pygame.font.Font('resources/font.ttf', FONT_SIZE)
+        self.bot = Bot(NUM_CELLS)
 
         self.enable_portal = options.get("portal", True)
         self.enable_block = options.get("block", True)
@@ -63,6 +65,7 @@ class Game():
             self.portal_3 = Portal(SIZE_PER_CELL, NUM_CELLS)
             self.portal_4 = Portal(SIZE_PER_CELL, NUM_CELLS)
 
+        self.blocks = []
         if self.enable_block:
             self.blocks = self.init_blocks()
 
@@ -97,10 +100,16 @@ class Game():
                 if event.type == pygame.USEREVENT:
                     self.update()
                     self.snake_interaction()
-                self.movement(event)
+
+                if self.enable_bot == False:
+                    self.movement(event)
+                else:
+                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.apple.pos, self.blocks)
+                    self.bot_movement(bot_choice)
+
                 if self.check_collision():
                     return
-
+                
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -120,6 +129,20 @@ class Game():
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
+    
+    def bot_movement(self, bot_choice):
+        if bot_choice == 0:
+            if self.snake.direction.y != 1:
+                self.snake.direction = Vector2(0, -1)
+        if bot_choice == 3:
+            if self.snake.direction.x != -1:
+                self.snake.direction = Vector2(1, 0)
+        if bot_choice == 2:
+            if self.snake.direction.y != -1:
+                self.snake.direction = Vector2(0, 1)
+        if bot_choice == 1:
+            if self.snake.direction.x != 1:
+                self.snake.direction = Vector2(-1, 0)
 
     def check_enter_portal(self):
         if not self.portal_enterable:
