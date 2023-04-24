@@ -1,4 +1,5 @@
 from pygame import Vector2
+
 # global variables
 NUM_DIRE = 4
 
@@ -38,21 +39,24 @@ class Bot:
     def update_graph(self, snake_pos, apple_pos, blocks):
         self.map[int(apple_pos.x)][int(apple_pos.y)] = [APPLE] * NUM_DIRE
         for snk in snake_pos:
+            print(int(snk.x), int(snk.y))
             self.map[int(snk.x)][int(snk.y)] = [SNAKE] * NUM_DIRE
         for blk in blocks:
             self.map[int(blk.pos.x)][int(blk.pos.y)] = [BLOCK] * NUM_DIRE
 
-    def get_move(self, snake_pos, snake_dir, apple_pos, blocks):
+    def get_move(self, snake_pos, snake_dir, tail_last_block_pos, apple_pos, blocks):
         if len(snake_pos) <= 0:
             return None
         self.reset_graph()
         self.update_graph(snake_pos, apple_pos, blocks)
-        pos, path_history = self.bfs(snake_pos[0], snake_dir)
-        if (pos == snake_pos[0]):
-            return self.greedy(snake_pos[0], snake_dir)
+        pos, path_history = self.bfs(snake_pos[0], snake_dir, apple_pos)
+        if pos == snake_pos[0]:
+            pos, path_history = self.bfs(snake_pos[0], snake_dir, tail_last_block_pos)
+            if pos == snake_pos[0]:
+                return self.greedy(snake_pos[0], snake_dir)
         return self.backtrack(pos, path_history, snake_pos[0])
 
-    def bfs(self, loc, dir):
+    def bfs(self, loc, dir, goal):
         queue = []
         prev = {}
         visited = set()
@@ -71,7 +75,7 @@ class Bot:
             x, y, d = curr_pos
             visited.add(curr_pos)
 
-            if self.map[x][y][d] == APPLE:
+            if Vector2(x, y) == goal:
                 return curr_pos, prev
 
             dir = DIRE_LOOKUP[d]
@@ -89,6 +93,13 @@ class Bot:
 
         return loc, prev
 
+
+    def backtrack(self, pos, path_history, snake_head):
+        if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
+            return path_history[pos][2]
+
+        return self.backtrack(path_history[pos], path_history, snake_head)
+    
     def greedy(self, loc, dir):
         for k, v in VECTOR_LOOKUP.items():
             if k == (self._vector2_to_pair(-dir)):
@@ -99,25 +110,5 @@ class Bot:
                 continue
             if (self.map[next_x][next_y][0] == EMPTY or self.map[next_x][next_y][0] == APPLE):
                 return v
+            
         return None
-
-    def backtrack(self, pos, path_history, snake_head):
-        if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
-            return path_history[pos][2]
-
-        return self.backtrack(path_history[pos], path_history, snake_head)
-
-
-if __name__ == "__main__":
-    bot = Bot(20)
-    print(bot.get_move(
-        [Vector2(12, 10), Vector2(12, 11), Vector2(12, 12),],
-        Vector2(0, -1),
-        Vector2(6, 5)
-    ))
-
-    # print(bot.get_move(
-    #         [Vector2(12, 10),Vector2(12, 11),Vector2(12, 12),],
-    #         Vector2(0, -1),
-    #         Vector2(10, 10)
-    #         ))
