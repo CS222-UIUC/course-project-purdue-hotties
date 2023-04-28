@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 1  # ms
+EVENT_CYCLE = 50  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -54,12 +54,11 @@ class Game():
         self.enable_block = options.get("block", True)
         self.enable_bot = options.get("bot", False)
 
-
     def reset_game(self):
         self.score = 0
         self.snake = Snake(SIZE_PER_CELL, NUM_CELLS)
         self.apple = Apple(SIZE_PER_CELL, NUM_CELLS)
-        
+
         if self.enable_portal:
             self.portal_1 = Portal(SIZE_PER_CELL, NUM_CELLS)
             self.portal_2 = Portal(SIZE_PER_CELL, NUM_CELLS)
@@ -104,14 +103,14 @@ class Game():
 
                 if self.check_collision():
                     return
-                
+
                 if self.enable_bot == False:
                     self.movement(event)
                 else:
-                    bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.snake.tail_last_block, self.apple.pos, self.blocks)
+                    bot_choice = self.bot.get_move(
+                        self.snake.body, self.snake.direction, self.snake.tail_last_block, self.apple.pos, self.blocks)
                     self.bot_movement(bot_choice)
 
-                
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -131,7 +130,7 @@ class Game():
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
-    
+
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
             if self.snake.direction.y != 1:
@@ -196,14 +195,18 @@ class Game():
                     items_pos.append(self.portal_3.pos)
                     self.portal_4.randomize(self.snake.body, items_pos)
                     items_pos.append(self.portal_4.pos)
-                
+                else:
+                    items_pos.append(self.portal_1.pos)
+                    items_pos.append(self.portal_2.pos)
+                    items_pos.append(self.portal_3.pos)
+                    items_pos.append(self.portal_4.pos)
+
             # random obstacle spawning logic after eating an apple
-            if self.enable_block: 
+            if self.enable_block:
                 self.has_block = True
-                if self.has_block == True:
-                    for blk in self.blocks:
-                        blk.randomize(self.snake.body, items_pos)
-                        items_pos.append(blk.pos)
+                for blk in self.blocks:
+                    blk.randomize(self.snake.body, items_pos)
+                    items_pos.append(blk.pos)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
@@ -236,7 +239,7 @@ class Game():
                     grass_blk = pygame.Rect(
                         row * SIZE_PER_CELL, col * SIZE_PER_CELL, SIZE_PER_CELL, SIZE_PER_CELL)
                     pygame.draw.rect(self.screen, GRASS_COLOR, grass_blk)
-    
+
     def draw_menu_block(self):
         for row in range(NUM_CELLS // 2 - 4, NUM_CELLS // 2 + 6):
             for col in range(NUM_CELLS // 2 - 3, NUM_CELLS // 2 + 5):
@@ -260,7 +263,7 @@ class Game():
             self.portal_2.draw_item(self.screen)
             self.portal_3.draw_item(self.screen)
             self.portal_4.draw_item(self.screen)
-        
+
         if self.has_block:
             for blk in self.blocks:
                 blk.draw_item(self.screen)
