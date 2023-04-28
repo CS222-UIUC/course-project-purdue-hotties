@@ -12,6 +12,7 @@ SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
 EVENT_CYCLE = 50  # ms
+
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -53,6 +54,8 @@ class Game():
         self.enable_portal = options.get("portal", True)
         self.enable_block = options.get("block", True)
         self.enable_bot = options.get("bot", False)
+        self.recv_input = False
+
 
     def reset_game(self):
         self.score = 0
@@ -113,23 +116,31 @@ class Game():
 
             self.draw_elements()
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(EVENT_CYCLE)
 
     def movement(self, event):
+        if self.recv_input:
+            return
+
         if event.type == pygame.KEYDOWN:
             key = event.key
             if key == pygame.K_UP or key == pygame.K_w:
                 if self.snake.direction.y != 1:
                     self.snake.direction = Vector2(0, -1)
+                    self.recv_input = True
             if key == pygame.K_RIGHT or key == pygame.K_d:
                 if self.snake.direction.x != -1:
                     self.snake.direction = Vector2(1, 0)
+                    self.recv_input = True
             if key == pygame.K_DOWN or key == pygame.K_s:
                 if self.snake.direction.y != -1:
                     self.snake.direction = Vector2(0, 1)
+                    self.recv_input = True
             if key == pygame.K_LEFT or key == pygame.K_a:
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
+                    self.recv_input = True
+
 
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
@@ -271,6 +282,7 @@ class Game():
         self.draw_score()
 
     def update(self):
+        self.recv_input = False
         self.snake.move_snake()
 
     def draw_score(self):
