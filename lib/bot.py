@@ -96,7 +96,8 @@ class Bot:
         queue = []
         history = {}
         visited = set()
-        last_pos = None
+        last_pos = (int(loc.x), int(loc.y),
+                    VECTOR_LOOKUP[(int(dir.x), int(dir.y))])
 
         for k, v in VECTOR_LOOKUP.items():
             if k == (self._vector2_to_pair(-dir)):
@@ -129,10 +130,16 @@ class Bot:
         return last_pos, history
 
     def backtrack(self, pos, path_history, snake_head):
+        print("x:", path_history[pos][0], int(snake_head.x), path_history[pos][0] == int(snake_head.x))
+        print("y:", path_history[pos][1], int(snake_head.y), path_history[pos][1] == int(snake_head.y))
         if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
-            return path_history[pos][2]
-
-        return self.backtrack(path_history[pos], path_history, snake_head)
+            print("in if", pos, path_history[pos])
+            if path_history[pos] == (-1, -1, -1):
+                return -1
+            else:
+                return path_history[pos][2]
+        else:
+            return self.backtrack(path_history[pos], path_history, snake_head)
 
     # def greedy(self, loc, dir):
     #     for k, v in VECTOR_LOOKUP.items():
