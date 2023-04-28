@@ -130,16 +130,12 @@ class Bot:
         return last_pos, history
 
     def backtrack(self, pos, path_history, snake_head):
-        print("x:", path_history[pos][0], int(snake_head.x), path_history[pos][0] == int(snake_head.x))
-        print("y:", path_history[pos][1], int(snake_head.y), path_history[pos][1] == int(snake_head.y))
-        if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
-            print("in if", pos, path_history[pos])
-            if path_history[pos] == (-1, -1, -1):
+        while True:
+            if pos == (-1, -1, -1):
                 return -1
-            else:
+            if path_history[pos][0] == int(snake_head.x) and path_history[pos][1] == int(snake_head.y):
                 return path_history[pos][2]
-        else:
-            return self.backtrack(path_history[pos], path_history, snake_head)
+            pos = path_history[pos]
 
     # def greedy(self, loc, dir):
     #     for k, v in VECTOR_LOOKUP.items():
