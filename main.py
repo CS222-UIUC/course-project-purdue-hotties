@@ -10,7 +10,7 @@ NUM_PROCESSES = 20
 ITER_PER_PROCESS = 50
 
 
-def benchmark_helper(res, proc_id):
+def benchmark_helper(res, proc_id, ITER_PER_PROCESS):
     options = {"portal": True, "block": True, "bot": True}
     game = Game(options, event_cycle=1)
     for i in tqdm(range(ITER_PER_PROCESS)):
@@ -22,7 +22,7 @@ def benchmark():
     processes = [None] * NUM_PROCESSES
     for i in range(NUM_PROCESSES):
         processes[i] = multiprocessing.Process(
-            target=benchmark_helper, args=(arr, i,))
+            target=benchmark_helper, args=(arr, i, ITER_PER_PROCESS,))
 
     for p in processes:
         p.start()
