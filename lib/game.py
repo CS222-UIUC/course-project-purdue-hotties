@@ -11,7 +11,8 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 200  # ms
+EVENT_CYCLE = 50  # ms
+
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -54,6 +55,7 @@ class Game():
         self.enable_block = options.get("block", True)
         self.enable_bot = options.get("bot", False)
         self.recv_input = False
+
 
     def reset_game(self):
         self.score = 0
@@ -139,6 +141,7 @@ class Game():
                     self.snake.direction = Vector2(-1, 0)
                     self.recv_input = True
 
+
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
             if self.snake.direction.y != 1:
@@ -203,14 +206,18 @@ class Game():
                     items_pos.append(self.portal_3.pos)
                     self.portal_4.randomize(self.snake.body, items_pos)
                     items_pos.append(self.portal_4.pos)
+                else:
+                    items_pos.append(self.portal_1.pos)
+                    items_pos.append(self.portal_2.pos)
+                    items_pos.append(self.portal_3.pos)
+                    items_pos.append(self.portal_4.pos)
 
             # random obstacle spawning logic after eating an apple
             if self.enable_block:
                 self.has_block = True
-                if self.has_block == True:
-                    for blk in self.blocks:
-                        blk.randomize(self.snake.body, items_pos)
-                        items_pos.append(blk.pos)
+                for blk in self.blocks:
+                    blk.randomize(self.snake.body, items_pos)
+                    items_pos.append(blk.pos)
 
     def check_snake_not_on_portal(self):
         for body_blk in self.snake.body:
