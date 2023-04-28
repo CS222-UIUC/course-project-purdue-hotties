@@ -41,6 +41,9 @@ BLACK = (0, 0, 0)
 
 class Game():
     def __init__(self, options, event_cycle=150) -> None:
+        global EVENT_CYCLE
+        EVENT_CYCLE = event_cycle
+
         pygame.init()
         self.screen = pygame.display.set_mode(
             (NUM_CELLS * SIZE_PER_CELL, NUM_CELLS * SIZE_PER_CELL))
@@ -54,9 +57,6 @@ class Game():
         self.enable_block = options.get("block", True)
         self.enable_bot = options.get("bot", False)
         self.recv_input = False
-
-        global EVENT_CYCLE
-        EVENT_CYCLE = event_cycle
 
     def game_start(self):
         font = pygame.font.Font(None, 36)
@@ -148,7 +148,6 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
                     self.recv_input = True
-
 
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
