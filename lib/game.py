@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 30  # ms
+EVENT_CYCLE = 150  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -40,7 +40,7 @@ BLACK = (0, 0, 0)
 
 
 class Game():
-    def __init__(self, options) -> None:
+    def __init__(self, options, event_cycle=150) -> None:
         pygame.init()
         self.screen = pygame.display.set_mode(
             (NUM_CELLS * SIZE_PER_CELL, NUM_CELLS * SIZE_PER_CELL))
@@ -54,6 +54,9 @@ class Game():
         self.enable_block = options.get("block", True)
         self.enable_bot = options.get("bot", False)
         self.recv_input = False
+
+        global EVENT_CYCLE
+        EVENT_CYCLE = event_cycle
 
     def game_start(self):
         font = pygame.font.Font(None, 36)
