@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 1  # ms
+EVENT_CYCLE = 1000  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -25,7 +25,15 @@ SCORE_BOX_BG_COLOR = (167, 209, 61)
 SCORE_BOX_OUTLINE_COLOR = (0, 0, 0)
 SCORE_BOX_OUTLINE_WIDTH = 3
 
+#timer styling
+TIMER_TEXT_COLOR = (100, 58, 207)
+TIMER_BOX_BG_COLOR = (167, 209, 61)
+TIMER_BOX_OUTLINE_COLOR = (0, 0, 0)
+TIMER_BOX_OUTLINE_WIDTH = 3
+TIME_TIME = 0
+
 SCORE_COORDINATES = (SIZE_PER_CELL * (NUM_CELLS - 1), SIZE_PER_CELL)
+TIMER_COORDINATES = (SIZE_PER_CELL * (NUM_CELLS // 2), SIZE_PER_CELL)
 
 # Screen dimensions
 WIDTH, HEIGHT = SIZE_PER_CELL * NUM_CELLS, SIZE_PER_CELL * NUM_CELLS
@@ -57,6 +65,7 @@ class Game():
 
     def reset_game(self):
         self.score = 0
+        self.time = 0
         self.snake = Snake(SIZE_PER_CELL, NUM_CELLS)
         self.apple = Apple(SIZE_PER_CELL, NUM_CELLS)
         
@@ -111,7 +120,7 @@ class Game():
                     bot_choice = self.bot.get_move(self.snake.body, self.snake.direction, self.snake.tail_last_block, self.apple.pos, self.blocks)
                     self.bot_movement(bot_choice)
 
-                
+            self.time += 1
             self.draw_elements()
             pygame.display.update()
             self.clock.tick(60)
@@ -266,6 +275,7 @@ class Game():
                 blk.draw_item(self.screen)
 
         self.draw_score()
+        self.draw_timer()
 
     def update(self):
         self.snake.move_snake()
@@ -287,6 +297,28 @@ class Game():
         self.screen.blit(self.apple.get_image(), apple_rect)
         pygame.draw.rect(self.screen, SCORE_BOX_OUTLINE_COLOR,
                          score_bg_rect, SCORE_BOX_OUTLINE_WIDTH)
+        
+    def draw_timer(self):
+        tot_seconds = self.time // 60
+        minu = tot_seconds // 60
+        seconds = tot_seconds - minu * 60
+        timer_text = str(minu) + ":" + "%02d" % seconds
+        timer_font = self.font.render(timer_text, True, TIMER_TEXT_COLOR)
+        timer_rect = timer_font.get_rect(
+            center=(TIMER_COORDINATES[0], TIMER_COORDINATES[1]), ) #center need to change
+
+        timer_box_margin = 5
+        #MADE CHANEGS --------------------------------------------------------------------
+        timer_bg_rect = pygame.Rect(timer_rect.left, timer_rect.top, timer_rect.width +
+                                    timer_rect.width + timer_box_margin, timer_rect.height)
+
+        # pygame.draw.rect(self.screen, TIMER_BOX_BG_COLOR, timer_bg_rect)
+        self.screen.blit(timer_font, timer_rect)
+        #self.screen.blit(self.apple.get_image(), apple_rect)
+        # pygame.draw.rect(self.screen, TIMER_BOX_OUTLINE_COLOR,
+        #                  timer_bg_rect, TIMER_BOX_OUTLINE_WIDTH)
+        #-------------------------------------------------------------------------------------
+
 
     @staticmethod
     def get_map_size():
