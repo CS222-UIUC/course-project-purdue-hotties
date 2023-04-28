@@ -118,6 +118,8 @@ class Game():
                 if self.enable_bot == False:
                     self.movement(event)
                 else:
+                    if self.bot_exit(event) == True:
+                        return
                     bot_choice = self.bot.get_move(
                         self.snake.body, self.snake.direction, self.snake.tail_last_block, self.apple.pos, self.blocks)
                     self.bot_movement(bot_choice)
@@ -148,6 +150,13 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
                     self.recv_input = True
+
+    def bot_exit(self, event):
+        if event.type == pygame.KEYDOWN:
+            key = event.key
+            if key == pygame.K_q:
+                return True
+        return False
 
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
@@ -321,6 +330,7 @@ class Game():
         SCREEN.blit(surface, rect)
 
     def main_menu(self, font):
+        self.enable_bot = False
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -332,16 +342,21 @@ class Game():
                     if event.key == pygame.K_q:
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_e:
+                        self.enable_bot = True
+                        return
 
             SCREEN.fill(BACKGROUND_COLOR)
             self.draw_grass()
             self.draw_menu_block()
             self.draw_text(font, "Snake Game", BLACK,
-                           WIDTH // 2, HEIGHT // 2 - 115)
+                           WIDTH // 2, HEIGHT // 2 - 110)
             self.draw_text(font, "Press ENTER to start",
                            WHITE, WIDTH // 2, HEIGHT // 2 - 10)
+            self.draw_text(font, "Press E to begin bot",
+                           WHITE, WIDTH // 2, HEIGHT // 2 + 40)
             self.draw_text(font, "Press Q to quit", WHITE,
-                           WIDTH // 2, HEIGHT // 2 + 95)
+                           WIDTH // 2, HEIGHT // 2 + 90)
 
             pygame.display.flip()
 
