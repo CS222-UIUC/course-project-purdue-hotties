@@ -40,7 +40,14 @@ def benchmark():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', '--benchmark', action="store_true")
+    parser.add_argument('-p', '--processes', type=int)
+    parser.add_argument('-i', '--iteration', type=int)
     args = parser.parse_args()
+
+    if args.processes is not None:
+        NUM_PROCESSES = args.processes
+    if args.iteration is not None:
+        ITER_PER_PROCESS = args.iteration
 
     if args.benchmark:
         benchmark()
