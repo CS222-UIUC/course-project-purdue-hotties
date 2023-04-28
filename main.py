@@ -12,7 +12,7 @@ ITER_PER_PROCESS = 50
 
 def benchmark_helper(res, proc_id):
     options = {"portal": True, "block": True, "bot": True}
-    game = Game(options)
+    game = Game(options, event_cycle=1)
     for i in tqdm(range(ITER_PER_PROCESS)):
         res[i + (proc_id * ITER_PER_PROCESS)] = game.one_iter()
 
