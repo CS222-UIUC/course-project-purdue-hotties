@@ -11,7 +11,7 @@ import random
 SIZE_PER_CELL = 40
 NUM_CELLS = 20
 FONT_SIZE = 25
-EVENT_CYCLE = 30  # ms
+EVENT_CYCLE = 150  # ms
 STARTING_SNAKE_LENGTH = 3
 SPAWN_PORTAL_PROB = 1
 BLOCK_NUM = 4
@@ -40,7 +40,10 @@ BLACK = (0, 0, 0)
 
 
 class Game():
-    def __init__(self, options) -> None:
+    def __init__(self, options, event_cycle=150) -> None:
+        global EVENT_CYCLE
+        EVENT_CYCLE = event_cycle
+
         pygame.init()
         self.screen = pygame.display.set_mode(
             (NUM_CELLS * SIZE_PER_CELL, NUM_CELLS * SIZE_PER_CELL))
@@ -55,6 +58,22 @@ class Game():
         self.enable_bot = options.get("bot", False)
         self.recv_input = False
 
+    def game_start(self):
+        font = pygame.font.Font(None, 36)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.main_menu(font)
+            self.reset_game()
+            self.game_loop()
+            self.game_over_menu(font)
+
+    def one_iter(self):
+        self.reset_game()
+        self.game_loop()
+        return self.score
 
     def reset_game(self):
         self.score = 0
@@ -69,29 +88,19 @@ class Game():
 
         self.blocks = []
         if self.enable_block:
-            self.blocks = self.init_blocks()
+            self.init_blocks()
 
         self.has_portal = False
         self.has_block = False
         self.portal_enterable = False
 
     def init_blocks(self):
-        blocks_pos = []
         for _ in range(BLOCK_NUM):
-            blocks_pos.append(Block(SIZE_PER_CELL, NUM_CELLS))
-        return blocks_pos
-
-    def game_start(self):
-        font = pygame.font.Font(None, 36)
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-            self.main_menu(font)
-            self.reset_game()
-            self.game_loop()
-            self.game_over_menu(font)
+            self.blocks.append(Block(SIZE_PER_CELL, NUM_CELLS))
+        items_pos = [self.apple.pos]
+        for blk in self.blocks:
+            blk.randomize(self.snake.body, items_pos)
+            items_pos.append(blk.pos)
 
     def game_loop(self):
         while True:
@@ -139,7 +148,6 @@ class Game():
                 if self.snake.direction.x != 1:
                     self.snake.direction = Vector2(-1, 0)
                     self.recv_input = True
-
 
     def bot_movement(self, bot_choice):
         if bot_choice == 0:
