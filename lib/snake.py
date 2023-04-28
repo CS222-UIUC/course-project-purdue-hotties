@@ -120,7 +120,7 @@ class Snake:
                 self.head = self.head_right
             elif self.direction == Vector2(0, -1):
                 self.head = self.head_up
-            elif self.direction == Vector2(0, 1):
+            else:
                 self.head = self.head_down
 
     def update_tail_graphics(self):
@@ -133,6 +133,15 @@ class Snake:
             self.tail = self.tail_up
         elif tail_relation == Vector2(0, -1):
             self.tail = self.tail_down
+        else:
+            if self.direction == Vector2(-1, 0):
+                self.tail = self.head_left
+            elif self.direction == Vector2(1, 0):
+                self.tail = self.head_right
+            elif self.direction == Vector2(0, -1):
+                self.tail = self.head_up
+            else:
+                self.tail = self.head_down
 
     def grow_snake(self):
         self.grow = True
