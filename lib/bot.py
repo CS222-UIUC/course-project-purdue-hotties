@@ -50,9 +50,9 @@ class Bot:
         self.update_graph(snake_pos, apple_pos, blocks)
         pos, path_history = self.bfs(snake_pos[0], snake_dir, apple_pos)
         if pos == snake_pos[0]:
-            pos, path_history = self.bfs(snake_pos[0], snake_dir, tail_last_block_pos)
+            pos, path_history = self.bfs(
+                snake_pos[0], snake_dir, tail_last_block_pos)
             if pos == snake_pos[0]:
-                print("DFS")
                 pos, path_history = self.dfs(snake_pos[0], snake_dir)
         return self.backtrack(pos, path_history, snake_pos[0])
 
@@ -111,7 +111,7 @@ class Bot:
                 continue
             x, y, d = curr_pos
             visited.add(curr_pos)
-    
+
             dir = DIRE_LOOKUP[d]
             next_x = x + dir[0]
             next_y = y + dir[1]
@@ -133,7 +133,7 @@ class Bot:
             return path_history[pos][2]
 
         return self.backtrack(path_history[pos], path_history, snake_head)
-    
+
     # def greedy(self, loc, dir):
     #     for k, v in VECTOR_LOOKUP.items():
     #         if k == (self._vector2_to_pair(-dir)):
@@ -144,5 +144,5 @@ class Bot:
     #             continue
     #         if (self.map[next_x][next_y][0] == EMPTY or self.map[next_x][next_y][0] == APPLE):
     #             return v
-            
+
     #     return None
